@@ -48,18 +48,14 @@ export const signUpWithInviteCode = async (
     if (authError) throw authError;
     if (!authData.user) throw new Error('注册失败');
 
-    // 3. 标记邀请码已使用
-    // 注意：普通用户可能没权限改 invite_codes 表。
-    // 如果数据库 RLS 没开放 update 权限给 anon/public，这步在前端会失败。
-    // 解决方案：使用 Postgres Function 或者简单的 API Route。
-    // 为了不卡住流程，假设 invite_codes 表暂时开放了部分权限。
-    const { error: updateError } = await supabase
-        .from('invite_codes')
-        .update({ is_used: true })
-        .eq('id', codeData.id);
+    // 3. 标记邀请码已使用 (调用 RPC 函数)
+    const { error: updateError } = await supabase.rpc('mark_invite_used', {
+        invite_id: codeData.id
+    });
 
     if (updateError) {
         console.error('Warning: Failed to mark invite code as used', updateError);
+        // 这里只是标记失败，用户其实已经注册成功了，所以不抛出阻断性错误
     }
 
     return authData;
