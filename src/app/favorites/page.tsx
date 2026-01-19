@@ -128,8 +128,7 @@ export default function FavoritesPage() {
     return (
         <div className="container mx-auto p-4 sm:p-8 max-w-6xl min-h-[calc(100vh-200px)]">
             <header className="mb-8">
-                <h1 className="text-3xl font-bold text-teal-600 mb-2">我的收藏夹</h1>
-                <p className="text-gray-500">整理你的心动瞬间</p>
+                <h1 className="text-3xl font-bold text-pink-500 mb-2">我的收藏夹</h1>
             </header>
 
             <div className="grid lg:grid-cols-4 gap-8">
