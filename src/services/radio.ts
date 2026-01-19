@@ -36,7 +36,7 @@ export const getRadioMessages = async (page = 1, pageSize = 10) => {
     if (error) throw error;
 
     return {
-        data: data as (RadioMessage & { linked_work?: { title: string, author_name: string } })[],
+        data: data as (RadioMessage & { linked_work?: { id: number; title: string; author_name: string } })[],
         total: count || 0
     };
 };

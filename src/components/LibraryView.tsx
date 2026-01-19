@@ -16,6 +16,12 @@ export default function LibraryView() {
     const [page, setPage] = useState(1);
     const [total, setTotal] = useState(0);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+    // Search States
+    const [isSearchMode, setIsSearchMode] = useState(false);
+    const [searchInputValue, setSearchInputValue] = useState('');
+    const [appliedQuery, setAppliedQuery] = useState('');
+
     const pageSize = 6; // 一页显示几个
 
     const categoryOrder = ['类型', '世界观', '篇幅', '进度', '情感', '剧情', '预警', '人设', '幻想', '设定'];
@@ -29,7 +35,7 @@ export default function LibraryView() {
     useEffect(() => {
         fetchWorks();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedTagIds, page]);
+    }, [selectedTagIds, page, appliedQuery]);
 
     const fetchWorks = async () => {
         setLoading(true);
@@ -37,7 +43,8 @@ export default function LibraryView() {
             const { data, total } = await getWorks({
                 page,
                 pageSize,
-                filterTagIds: selectedTagIds
+                filterTagIds: selectedTagIds,
+                searchQuery: appliedQuery
             });
             setWorks(data);
             setTotal(total);
@@ -57,6 +64,25 @@ export default function LibraryView() {
             }
         });
         setPage(1); // Reset to page 1 whenever filter changes
+    };
+
+    const handleSearch = () => {
+        if (searchInputValue.trim() !== appliedQuery) {
+            setAppliedQuery(searchInputValue.trim());
+            setPage(1);
+        }
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            handleSearch();
+        }
+    };
+
+    const clearSearch = () => {
+        setSearchInputValue('');
+        setAppliedQuery('');
+        setIsSearchMode(false);
     };
 
     const totalPages = Math.ceil(total / pageSize);
@@ -135,21 +161,83 @@ export default function LibraryView() {
             {/* Right Content: Work List */}
             <main className="flex-1">
 
-                {/* Status Bar */}
-                <div className="mb-4 flex items-center justify-between text-sm text-gray-500 bg-white px-4 py-3 rounded-lg border border-gray-100 shadow-sm">
-                    <span>共找到 {total} 部作品</span>
-                    {selectedTagIds.length > 0 && (
-                        <span className="flex items-center gap-2">
-                            <span className="hidden sm:inline">已选标签:</span>
-                            <span className="flex flex-wrap gap-1">
-                                {selectedTagIds.map(id => {
-                                    const tag = Object.values(groupedTags).flat().find(t => t.id === id);
-                                    return tag ? (
-                                        <span key={id} className="bg-pink-100 text-pink-700 px-2 py-0.5 rounded-full text-xs font-medium">#{tag.name}</span>
-                                    ) : null;
-                                })}
-                            </span>
-                        </span>
+                {/* Status Bar / Search Bar */}
+                <div
+                    className={`mb-4 flex items-center justify-between text-sm bg-white rounded-lg border shadow-sm transition-all duration-300 ${isSearchMode ? 'ring-2 ring-pink-200 border-pink-300 py-2 px-3' : 'border-gray-100 py-3 px-4 hover:border-pink-200 cursor-text'}`}
+                    onClick={() => {
+                        if (!isSearchMode) {
+                            setIsSearchMode(true);
+                        }
+                    }}
+                >
+                    {isSearchMode ? (
+                        <div className="flex-1 flex items-center w-full">
+                            <svg className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                            <input
+                                type="text"
+                                className="flex-1 outline-none text-gray-700 bg-transparent placeholder-gray-400"
+                                placeholder="搜索作品名或作者..."
+                                autoFocus
+                                value={searchInputValue}
+                                onChange={(e) => setSearchInputValue(e.target.value)}
+                                onKeyDown={handleKeyDown}
+                                onBlur={() => {
+                                    // 只有当输入为空且没有生效的查询时，失焦才收起
+                                    // 否则保持搜索状态
+                                    if (!searchInputValue && !appliedQuery) {
+                                        setIsSearchMode(false);
+                                    }
+                                }}
+                            />
+                            {searchInputValue && (
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        clearSearch();
+                                    }}
+                                    className="ml-2 text-gray-400 hover:text-gray-600 p-1"
+                                    title="清除搜索"
+                                >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                                </button>
+                            )}
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleSearch();
+                                }}
+                                className="ml-2 px-3 py-1 bg-pink-500 text-white rounded-md text-xs font-bold shadow-sm hover:bg-pink-600 transition"
+                            >
+                                搜索
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="flex items-center justify-between w-full">
+                            <div className="flex items-center gap-2 text-gray-500">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                                <span>
+                                    {appliedQuery ? (
+                                        <span className="text-gray-800 font-medium">"{appliedQuery}" 的搜索结果 ({total})</span>
+                                    ) : (
+                                        <span>共找到 {total} 部作品</span>
+                                    )}
+                                </span>
+                            </div>
+
+                            {selectedTagIds.length > 0 && (
+                                <span className="flex items-center gap-2">
+                                    <span className="hidden sm:inline text-gray-400">已选标签:</span>
+                                    <span className="flex flex-wrap gap-1">
+                                        {selectedTagIds.map(id => {
+                                            const tag = Object.values(groupedTags).flat().find(t => t.id === id);
+                                            return tag ? (
+                                                <span key={id} className="bg-pink-100 text-pink-700 px-2 py-0.5 rounded-full text-xs font-medium">#{tag.name}</span>
+                                            ) : null;
+                                        })}
+                                    </span>
+                                </span>
+                            )}
+                        </div>
                     )}
                 </div>
 
@@ -162,9 +250,15 @@ export default function LibraryView() {
                 ) : works.length === 0 ? (
                     <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-gray-200">
                         <p className="text-gray-400">没有找到符合条件的作品</p>
-                        {selectedTagIds.length > 0 && (
-                            <button onClick={() => setSelectedTagIds([])} className="mt-2 text-pink-500 hover:underline">
-                                清除筛选条件
+                        {(selectedTagIds.length > 0 || appliedQuery) && (
+                            <button
+                                onClick={() => {
+                                    setSelectedTagIds([]);
+                                    clearSearch();
+                                }}
+                                className="mt-2 text-pink-500 hover:underline"
+                            >
+                                清除所有筛选
                             </button>
                         )}
                     </div>
