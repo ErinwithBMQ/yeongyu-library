@@ -61,3 +61,22 @@ export interface RadioReaction {
     emoji: string;
     created_at: string;
 }
+
+/**
+ * 对应数据库中的 public.favorite_folders 表
+ */
+export interface FavoriteFolder {
+    id: number;
+    user_id: string; // UUID
+    name: string;
+    created_at: string;
+}
+
+/**
+ * 对应数据库中的 public.folder_entries 表
+ */
+export interface FolderEntry {
+    folder_id: number;
+    work_id: number;
+    created_at: string;
+}

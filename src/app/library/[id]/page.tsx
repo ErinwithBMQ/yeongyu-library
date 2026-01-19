@@ -6,6 +6,7 @@ import { WorkWithTags } from '@/types';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import AddToFavoriteModal from '@/components/AddToFavoriteModal';
 
 export default function WorkDetailPage({ params }: { params: Promise<{ id: string }> }) {
     // Unwrapping params using React.use()
@@ -14,6 +15,7 @@ export default function WorkDetailPage({ params }: { params: Promise<{ id: strin
     const router = useRouter();
     const [work, setWork] = useState<WorkWithTags | null>(null);
     const [loading, setLoading] = useState(true);
+    const [isFavoriteModalOpen, setIsFavoriteModalOpen] = useState(false);
 
     useEffect(() => {
         const fetchWork = async () => {
@@ -55,14 +57,7 @@ export default function WorkDetailPage({ params }: { params: Promise<{ id: strin
                 <Link href="/library" className="text-gray-500 hover:text-pink-600 transition flex items-center gap-1">
                     &larr; 返回图书馆
                 </Link>
-                <div className="flex gap-4">
-                    {/* 这里的操作一般需要权限验证，暂时放开 */}
-                    {user && (
-                        <button onClick={handleDelete} className="text-red-400 hover:text-red-600 font-medium text-sm">
-                            删除作品
-                        </button>
-                    )}
-                </div>
+                
             </div>
 
             <div className="bg-white rounded-3xl shadow-sm border border-sakura/20 overflow-hidden relative">
@@ -91,6 +86,16 @@ export default function WorkDetailPage({ params }: { params: Promise<{ id: strin
                             阅读原文
                             <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                         </a>
+
+                        {user && (
+                            <button
+                                onClick={() => setIsFavoriteModalOpen(true)}
+                                className="mt-2 sm:mt-0 ml-0 sm:ml-2 inline-flex items-center justify-center px-4 py-3 bg-pink-100 text-pink-600 font-bold rounded-xl hover:bg-pink-200 transition-all"
+                                title="添加到收藏夹"
+                            >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" /></svg>
+                            </button>
+                        )}
                     </div>
 
                     {/* 标签墙 */}
@@ -113,6 +118,15 @@ export default function WorkDetailPage({ params }: { params: Promise<{ id: strin
 
                 </div>
             </div>
+
+            {/* 收藏夹模态框 */}
+            {isFavoriteModalOpen && work && (
+                <AddToFavoriteModal
+                    workId={work.id}
+                    isOpen={isFavoriteModalOpen}
+                    onClose={() => setIsFavoriteModalOpen(false)}
+                />
+            )}
         </div>
     );
 }

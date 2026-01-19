@@ -1,12 +1,26 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import { FavoriteFolder, Work } from '@/types';
+import { getMyFolders, createFolder, deleteFolder, getFolderWorks, removeWorkFromFolder } from '@/services/favorites';
+import Link from 'next/link';
 
 export default function FavoritesPage() {
     const { user, loading } = useAuth();
     const router = useRouter();
+
+    const [folders, setFolders] = useState<FavoriteFolder[]>([]);
+    const [selectedFolderId, setSelectedFolderId] = useState<number | null>(null);
+    const [works, setWorks] = useState<(Work & { added_at: string })[]>([]);
+
+    const [loadingFolders, setLoadingFolders] = useState(true);
+    const [loadingWorks, setLoadingWorks] = useState(false);
+
+    // 创建收藏夹状态
+    const [isCreating, setIsCreating] = useState(false);
+    const [newFolderName, setNewFolderName] = useState('');
 
     useEffect(() => {
         if (!loading && !user) {
@@ -14,14 +28,248 @@ export default function FavoritesPage() {
         }
     }, [user, loading, router]);
 
+    // 加载收藏夹列表
+    useEffect(() => {
+        if (user) {
+            loadFolders();
+        }
+    }, [user]);
+
+    // 当选中文件夹改变时，加载该文件夹的作品
+    useEffect(() => {
+        if (selectedFolderId) {
+            loadFolderWorks(selectedFolderId);
+        } else {
+            setWorks([]);
+        }
+    }, [selectedFolderId]);
+
+    const loadFolders = async () => {
+        try {
+            setLoadingFolders(true);
+            const data = await getMyFolders();
+            setFolders(data);
+            // 默认选中第一个文件夹 (如果有)
+            if (data.length > 0 && !selectedFolderId) {
+                setSelectedFolderId(data[0].id);
+            }
+        } catch (error) {
+            console.error('加载收藏夹失败', error);
+        } finally {
+            setLoadingFolders(false);
+        }
+    };
+
+    const loadFolderWorks = async (folderId: number) => {
+        try {
+            setLoadingWorks(true);
+            const data = await getFolderWorks(folderId);
+            setWorks(data);
+        } catch (error) {
+            console.error('加载收藏作品失败', error);
+        } finally {
+            setLoadingWorks(false);
+        }
+    };
+
+    const handleCreateFolder = async () => {
+        if (!newFolderName.trim()) return;
+        try {
+            const newFolder = await createFolder(newFolderName.trim());
+            setFolders([newFolder, ...folders]);
+            setNewFolderName('');
+            setIsCreating(false);
+            // 切换到新创建的文件夹
+            setSelectedFolderId(newFolder.id);
+        } catch (error) {
+            console.error('创建收藏夹失败', error);
+            alert('创建失败，请稍后重试');
+        }
+    };
+
+    const handleDeleteFolder = async (folderId: number, folderName: string) => {
+        if (!confirm(`确定要删除收藏夹 "${folderName}" 吗？此操作不可恢复，且会移除其中的所有收藏记录。`)) {
+            return;
+        }
+
+        try {
+            await deleteFolder(folderId);
+            const newFolders = folders.filter(f => f.id !== folderId);
+            setFolders(newFolders);
+
+            // 如果删除的是当前选中的，切换选中状态
+            if (selectedFolderId === folderId) {
+                setSelectedFolderId(newFolders.length > 0 ? newFolders[0].id : null);
+            }
+        } catch (error) {
+            console.error('删除收藏夹失败', error);
+            alert('删除失败');
+        }
+    };
+
+    const handleRemoveWork = async (workId: number, workTitle: string) => {
+        if (!selectedFolderId) return;
+        if (!confirm(`确定要将 "${workTitle}" 从此收藏夹移除吗？`)) return;
+
+        try {
+            await removeWorkFromFolder(selectedFolderId, workId);
+            setWorks(works.filter(w => w.id !== workId));
+        } catch (error) {
+            console.error('移出失败', error);
+            alert('操作失败');
+        }
+    };
+
+    const selectedFolder = folders.find(f => f.id === selectedFolderId);
+
     if (loading) return null;
     if (!user) return null;
 
     return (
-        <div className="container mx-auto p-4 sm:p-8">
-            <h1 className="text-3xl font-bold text-pink-500 mb-6">我的收藏夹</h1>
-            <div className="bg-white rounded-2xl p-8 shadow-sm text-center border border-gray-100">
-                <p className="text-gray-500">这里只有你能看见。</p>
+        <div className="container mx-auto p-4 sm:p-8 max-w-6xl min-h-[calc(100vh-200px)]">
+            <header className="mb-8">
+                <h1 className="text-3xl font-bold text-teal-600 mb-2">我的收藏夹</h1>
+                <p className="text-gray-500">整理你的心动瞬间</p>
+            </header>
+
+            <div className="grid lg:grid-cols-4 gap-8">
+                {/* 左侧：收藏夹列表 */}
+                <div className="lg:col-span-1 border-r border-gray-100 pr-4">
+                    <div className="flex items-center justify-between mb-4">
+                        <h2 className="font-semibold text-gray-700">文件夹</h2>
+                        <button
+                            onClick={() => setIsCreating(!isCreating)}
+                            className="text-pink-500 hover:bg-pink-50 p-1 rounded-md transition"
+                            title="新建收藏夹"
+                        >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+                        </button>
+                    </div>
+
+                    {isCreating && (
+                        <div className="mb-4 animate-fade-in-down">
+                            <input
+                                type="text"
+                                value={newFolderName}
+                                onChange={(e) => setNewFolderName(e.target.value)}
+                                placeholder="输入文件夹名称..."
+                                className="w-full px-3 py-2 border border-pink-200 rounded-lg text-sm focus:ring-2 focus:ring-pink-300 outline-none mb-2"
+                                autoFocus
+                                onKeyDown={(e) => e.key === 'Enter' && handleCreateFolder()}
+                            />
+                            <div className="flex gap-2 justify-end">
+                                <button onClick={() => setIsCreating(false)} className="text-xs text-gray-500 hover:text-gray-700">取消</button>
+                                <button
+                                    onClick={handleCreateFolder}
+                                    className="px-3 py-1 bg-pink-400 text-white text-xs rounded-md hover:bg-pink-500"
+                                    disabled={!newFolderName.trim()}
+                                >
+                                    创建
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    {loadingFolders ? (
+                        <div className="space-y-2">
+                            {[1, 2, 3].map(i => <div key={i} className="h-10 bg-gray-100 rounded-lg animate-pulse"></div>)}
+                        </div>
+                    ) : folders.length === 0 ? (
+                        <div className="text-center py-8 text-gray-400 text-sm bg-gray-50 rounded-lg">
+                            还没有创建收藏夹
+                        </div>
+                    ) : (
+                        <div className="space-y-2">
+                            {folders.map(folder => (
+                                <button
+                                    key={folder.id}
+                                    onClick={() => setSelectedFolderId(folder.id)}
+                                    className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all text-left group ${selectedFolderId === folder.id
+                                            ? 'bg-gradient-to-r from-pink-400 to-pink-500 text-white shadow-md'
+                                            : 'bg-white hover:bg-pink-50 text-gray-700'
+                                        }`}
+                                >
+                                    <div className="flex items-center gap-3 truncate">
+                                        <svg className={`w-5 h-5 flex-shrink-0 ${selectedFolderId === folder.id ? 'text-white' : 'text-pink-300'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" /></svg>
+                                        <span className="font-medium truncate">{folder.name}</span>
+                                    </div>
+                                </button>
+                            ))}
+                        </div>
+                    )}
+                </div>
+
+                {/* 右侧：作品列表 */}
+                <div className="lg:col-span-3 min-h-[400px]">
+                    {!selectedFolderId ? (
+                        <div className="h-full flex flex-col items-center justify-center text-gray-300 border-2 border-dashed border-gray-100 rounded-3xl">
+                            <svg className="w-16 h-16 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z" /></svg>
+                            <p>选择左侧文件夹查看收藏</p>
+                        </div>
+                    ) : (
+                        <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 min-h-full">
+                            <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-50">
+                                <div>
+                                    <h2 className="text-2xl font-bold text-gray-800">{selectedFolder?.name}</h2>
+                                    <p className="text-sm text-gray-400 mt-1">共 {works.length} 个作品</p>
+                                </div>
+                                <button
+                                    onClick={() => handleDeleteFolder(selectedFolder!.id, selectedFolder!.name)}
+                                    className="px-4 py-2 text-red-400 hover:bg-red-50 hover:text-red-500 rounded-lg text-sm transition flex items-center gap-2"
+                                >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                    删除此收藏夹
+                                </button>
+                            </div>
+
+                            {loadingWorks ? (
+                                <div className="text-center py-12">
+                                    <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-pink-400 mx-auto mb-4"></div>
+                                    <p className="text-gray-400">正在搬运书本...</p>
+                                </div>
+                            ) : works.length === 0 ? (
+                                <div className="text-center py-16 text-gray-400">
+                                    <p className="text-lg">这里空空如也</p>
+                                    <p className="text-sm mt-2">快去图书馆添加喜欢的作品吧</p>
+                                    <Link href="/library" className="mt-6 inline-block px-6 py-2 bg-mint/20 text-teal-700 rounded-full hover:bg-mint/30 transition">
+                                        前往图书馆
+                                    </Link>
+                                </div>
+                            ) : (
+                                <div className="grid md:grid-cols-2 gap-4">
+                                    {works.map((work) => (
+                                        <div key={work.id} className="group relative bg-gray-50 hover:bg-white border border-gray-100 hover:border-pink-200 rounded-xl p-4 transition-all hover:shadow-md">
+                                            <div className="flex justify-between items-start mb-2">
+                                                <span className="px-2 py-1 bg-white text-xs font-semibold text-gray-500 rounded border border-gray-100">
+                                                    {work.platform}
+                                                </span>
+                                                <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <button
+                                                        onClick={() => handleRemoveWork(work.id, work.title)}
+                                                        className="text-gray-400 hover:text-red-400 p-1"
+                                                        title="移除收藏"
+                                                    >
+                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <Link href={`/library/${work.id}`} className="block group-hover:text-pink-600 transition-colors">
+                                                <h3 className="text-lg font-bold text-gray-800 mb-1 truncate">{work.title}</h3>
+                                            </Link>
+
+                                            <p className="text-sm text-gray-600 mb-3">by {work.author_name}</p>
+
+                                            <div className="text-xs text-gray-400 flex justify-between items-end">
+                                                <span>收藏于 {new Date(work.added_at).toLocaleDateString()}</span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );
