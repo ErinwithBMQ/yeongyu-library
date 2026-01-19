@@ -24,7 +24,7 @@ export default function LibraryView() {
 
     const pageSize = 6; // 一页显示几个
 
-    const categoryOrder = ['类型', '世界观', '篇幅', '进度', '情感', '剧情', '预警', '人设', '幻想', '设定'];
+    const categoryOrder = ['类型', '世界观', '篇幅', '进度', '情感', '剧情', '预警', '人设', '幻想', '特殊设定'];
 
     // Load Tags on mount
     useEffect(() => {
@@ -264,43 +264,53 @@ export default function LibraryView() {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-5">
-                        {works.map(work => (
-                            <div key={work.id} className="group bg-white rounded-xl p-5 shadow-sm border border-gray-100 hover:shadow-md hover:border-pink-100 transition-all flex flex-col h-full relative overflow-hidden">
-                                {/* Decoration: Top colored line */}
-                                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-pink-200 to-mint-200"></div>
+                        {works.map(work => {
+                            const typeTag = work.tags?.find(t => t.category === '类型');
+                            return (
+                                <div key={work.id} className="group bg-white rounded-xl p-5 shadow-sm border border-gray-100 hover:shadow-md hover:border-pink-100 transition-all flex flex-col h-full relative overflow-hidden">
+                                    {/* Decoration: Top colored line */}
+                                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-pink-200 to-mint-200"></div>
 
-                                <div className="flex justify-between items-start mb-2">
-                                    <span className="text-xs font-medium text-gray-500 bg-green-50 px-2 py-1 rounded">
-                                        {work.platform || '未知平台'}
-                                    </span>
-                                    <a href={work.original_url} target="_blank" className="text-gray-300 hover:text-pink-500 transition-colors" title="直达原址">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-external-link"><path d="M15 3h6v6" /><path d="M10 14 21 3" /><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></svg>
-                                    </a>
-                                </div>
+                                    <div className="flex justify-between items-start mb-2">
+                                        <div className="flex items-center gap-2">
+                                            {typeTag && (
+                                                <span className="text-xs font-medium bg-pink-50 text-pink-600 border border-pink-100 px-2 py-1 rounded">
+                                                    {typeTag.name}
+                                                </span>
+                                            )}
+                                            <span className="text-xs font-medium bg-mint-light text-teal-700 px-2 py-1 rounded">
+                                                {work.platform || '未知平台'}
+                                            </span>
+                                        </div>
+                                        <a href={work.original_url} target="_blank" className="text-gray-300 hover:text-pink-500 transition-colors" title="直达原址">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-external-link"><path d="M15 3h6v6" /><path d="M10 14 21 3" /><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></svg>
+                                        </a>
+                                    </div>
 
-                                <h3 className="font-bold text-gray-800 text-lg mb-1 group-hover:text-pink-600 transition-colors line-clamp-1">
-                                    <Link href={`/library/${work.id}`}>{work.title}</Link>
-                                </h3>
-                                <div className="text-sm text-gray-500 mb-3">作者：{work.author_name}</div>
+                                    <h3 className="font-bold text-gray-800 text-lg mb-1 group-hover:text-pink-600 transition-colors line-clamp-1">
+                                        <Link href={`/library/${work.id}`}>{work.title}</Link>
+                                    </h3>
+                                    <div className="text-sm text-gray-500 mb-3">作者：{work.author_name}</div>
 
-                                {work.summary && (
-                                    <p className="text-xs text-gray-400 line-clamp-2 mb-4 flex-grow">
-                                        {work.summary}
-                                    </p>
-                                )}
-
-                                <div className="flex flex-wrap gap-1.5 mt-auto pt-4 border-t border-gray-50">
-                                    {work.tags?.slice(0, 5).map(tag => (
-                                        <span key={tag.id} className="text-[10px] px-2 py-0.5 bg-gray-50 text-gray-500 rounded-full border border-gray-100">
-                                            {tag.name}
-                                        </span>
-                                    ))}
-                                    {(work.tags && work.tags.length > 5) && (
-                                        <span className="text-[10px] px-2 py-0.5 text-gray-400">+{work.tags.length - 5}</span>
+                                    {work.summary && (
+                                        <p className="text-xs text-gray-400 line-clamp-2 mb-4 flex-grow">
+                                            {work.summary}
+                                        </p>
                                     )}
+
+                                    <div className="flex flex-wrap gap-1.5 mt-auto pt-4 border-t border-gray-50">
+                                        {work.tags?.slice(0, 5).map(tag => (
+                                            <span key={tag.id} className="text-[10px] px-2 py-0.5 bg-gray-50 text-gray-500 rounded-full border border-gray-100">
+                                                {tag.name}
+                                            </span>
+                                        ))}
+                                        {(work.tags && work.tags.length > 5) && (
+                                            <span className="text-[10px] px-2 py-0.5 text-gray-400">+{work.tags.length - 5}</span>
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 )}
 

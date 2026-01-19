@@ -28,11 +28,10 @@ export default function RadioMessageCard({ message, onReact }: RadioMessageCardP
     const messageType = isShort ? '碎碎念' : '来信';
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
-    // 信封模式下截取前两行
+    // 信封模式下截取前150字
     const getPreview = () => {
         if (isShort) return message.content;
-        const lines = message.content.split('\n');
-        return lines.slice(0, 2).join('\n');
+        return message.content.slice(0, 150);
     };
 
     return (

@@ -178,7 +178,7 @@ export default function RadioPage() {
                                 value={content}
                                 onChange={(e) => setContent(e.target.value)}
                                 className="w-full h-40 rounded-lg border-gray-200 p-3 focus:ring-2 focus:ring-mint focus:border-mint resize-none"
-                                placeholder="写下你想说的话...&#10;150字以内会显示为便利贴&#10;更长的内容会显示为信封"
+                                placeholder="写下你想说的话...&#10;150字以内会显示为碎碎念&#10;更长的内容会显示为信封"
                             ></textarea>
                         </div>
 
