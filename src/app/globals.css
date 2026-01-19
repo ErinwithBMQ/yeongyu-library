@@ -3,11 +3,19 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --sakura: #FFC4D6;
+  --sakura-light: #FFF0F5;
+  --mint: #A0E8AF;
+  --mint-light: #E0F8E5;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-sakura: var(--sakura);
+  --color-sakura-light: var(--sakura-light);
+  --color-mint: var(--mint);
+  --color-mint-light: var(--mint-light);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
