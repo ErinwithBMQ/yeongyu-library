@@ -5,11 +5,12 @@ import { getWorkById, deleteWork } from '@/services/works';
 import { WorkWithTags } from '@/types';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
 
 export default function WorkDetailPage({ params }: { params: Promise<{ id: string }> }) {
     // Unwrapping params using React.use()
     const { id } = use(params);
-
+    const { user } = useAuth();
     const router = useRouter();
     const [work, setWork] = useState<WorkWithTags | null>(null);
     const [loading, setLoading] = useState(true);
@@ -56,9 +57,11 @@ export default function WorkDetailPage({ params }: { params: Promise<{ id: strin
                 </Link>
                 <div className="flex gap-4">
                     {/* 这里的操作一般需要权限验证，暂时放开 */}
-                    <button onClick={handleDelete} className="text-red-400 hover:text-red-600 font-medium text-sm">
-                        删除作品
-                    </button>
+                    {user && (
+                        <button onClick={handleDelete} className="text-red-400 hover:text-red-600 font-medium text-sm">
+                            删除作品
+                        </button>
+                    )}
                 </div>
             </div>
 

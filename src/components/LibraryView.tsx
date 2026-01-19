@@ -15,7 +15,10 @@ export default function LibraryView() {
     const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
     const [page, setPage] = useState(1);
     const [total, setTotal] = useState(0);
-    const pageSize = 12; // 一页显示几个
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const pageSize = 6; // 一页显示几个
+
+    const categoryOrder = ['类型', '世界观', '篇幅', '进度', '情感', '剧情', '预警', '人设', '幻想', '设定'];
 
     // Load Tags on mount
     useEffect(() => {
@@ -58,50 +61,74 @@ export default function LibraryView() {
 
     const totalPages = Math.ceil(total / pageSize);
 
+    const sortedEntries = Object.entries(groupedTags).sort((a, b) => {
+        const indexA = categoryOrder.indexOf(a[0]);
+        const indexB = categoryOrder.indexOf(b[0]);
+        if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+        if (indexA !== -1) return -1;
+        if (indexB !== -1) return 1;
+        return 0;
+    });
+
     return (
         <div className="flex flex-col lg:flex-row gap-8">
             {/* Left Sidebar: Filters */}
-            <aside className="lg:w-64 flex-shrink-0 space-y-6">
-                <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-                    <div className="flex justify-between items-center mb-4">
-                        <h2 className="font-bold text-gray-700">标签筛选</h2>
-                        {selectedTagIds.length > 0 && (
+            <aside className={`flex-shrink-0 transition-all duration-300 ${isSidebarOpen ? 'lg:w-64' : 'lg:w-12'}`}>
+                <div className={`bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden ${isSidebarOpen ? 'p-4' : 'p-2'}`}>
+                    <div className={`flex items-center ${isSidebarOpen ? 'justify-between mb-4' : 'justify-center flex-col gap-4'}`}>
+                        {isSidebarOpen && <h2 className="font-bold text-gray-700">标签筛选</h2>}
+
+                        <button
+                            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                            className="p-1.5 rounded-lg hover:bg-gray-50 text-gray-500 transition-colors"
+                            title={isSidebarOpen ? "收起" : "展开筛选"}
+                        >
+                            {isSidebarOpen ? (
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 12l12 6" /></svg>
+                            ) : (
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18" /><path d="M7 12h10" /><path d="M10 18h4" /></svg>
+                            )}
+                        </button>
+
+                        {isSidebarOpen && selectedTagIds.length > 0 && (
                             <button
                                 onClick={() => setSelectedTagIds([])}
                                 className="text-xs text-pink-500 hover:underline"
                             >
-                                清除筛选
+                                清除
                             </button>
                         )}
                     </div>
 
-                    <div className="space-y-6 max-h-[70vh] overflow-y-auto pr-2 scrollbar-thin">
-                        {Object.entries(groupedTags).map(([category, tags]) => (
-                            <div key={category}>
-                                <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">{category}</h3>
-                                <div className="flex flex-wrap gap-2">
-                                    {tags.map(tag => {
-                                        const isSelected = selectedTagIds.includes(tag.id);
-                                        return (
-                                            <button
-                                                key={tag.id}
-                                                onClick={() => handleTagClick(tag.id)}
-                                                className={`
+                    {isSidebarOpen && (
+                        <div className="space-y-6 max-h-[70vh] overflow-y-auto pr-2 scrollbar-thin">
+                            {sortedEntries.map(([category, tags]) => (
+                                <div key={category}>
+                                    <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">{category}</h3>
+                                    <div className="flex flex-wrap gap-2">
+                                        {tags.map(tag => {
+                                            const isSelected = selectedTagIds.includes(tag.id);
+                                            return (
+                                                <button
+                                                    key={tag.id}
+                                                    onClick={() => handleTagClick(tag.id)}
+                                                    className={`
                             text-xs px-2.5 py-1 rounded-full transition-all border
                             ${isSelected
-                                                        ? 'bg-pink-500 text-white border-pink-500 shadow-sm scale-105'
-                                                        : 'bg-gray-50 text-gray-600 border-gray-100 hover:bg-white hover:border-pink-300'
-                                                    }
+                                                            ? 'bg-pink-500 text-white border-pink-500 shadow-sm scale-105'
+                                                            : 'bg-gray-50 text-gray-600 border-gray-100 hover:bg-white hover:border-pink-300'
+                                                        }
                         `}
-                                            >
-                                                {tag.name}
-                                            </button>
-                                        )
-                                    })}
+                                                >
+                                                    {tag.name}
+                                                </button>
+                                            )
+                                        })}
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </aside>
 
@@ -149,7 +176,7 @@ export default function LibraryView() {
                                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-pink-200 to-mint-200"></div>
 
                                 <div className="flex justify-between items-start mb-2">
-                                    <span className="text-xs font-medium text-gray-400 bg-gray-50 px-2 py-1 rounded">
+                                    <span className="text-xs font-medium text-gray-500 bg-green-50 px-2 py-1 rounded">
                                         {work.platform || '未知平台'}
                                     </span>
                                     <a href={work.original_url} target="_blank" className="text-gray-300 hover:text-pink-500 transition-colors" title="直达原址">
@@ -160,7 +187,7 @@ export default function LibraryView() {
                                 <h3 className="font-bold text-gray-800 text-lg mb-1 group-hover:text-pink-600 transition-colors line-clamp-1">
                                     <Link href={`/library/${work.id}`}>{work.title}</Link>
                                 </h3>
-                                <div className="text-sm text-gray-500 mb-3">by {work.author_name}</div>
+                                <div className="text-sm text-gray-500 mb-3">作者：{work.author_name}</div>
 
                                 {work.summary && (
                                     <p className="text-xs text-gray-400 line-clamp-2 mb-4 flex-grow">

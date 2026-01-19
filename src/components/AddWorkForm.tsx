@@ -103,7 +103,7 @@ export default function AddWorkForm() {
                             type="text" required
                             value={title} onChange={e => setTitle(e.target.value)}
                             className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-sakura focus:ring-2 focus:ring-sakura-light outline-none transition"
-                            placeholder="例如：全球高考"
+                            placeholder="填写作品名称，不需要书名号"
                         />
                     </div>
 
@@ -113,7 +113,7 @@ export default function AddWorkForm() {
                             type="text" required
                             value={author} onChange={e => setAuthor(e.target.value)}
                             className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-sakura focus:ring-2 focus:ring-sakura-light outline-none transition"
-                            placeholder="例如：木苏里"
+                            placeholder="可以直接复制发表平台上的作者名"
                         />
                     </div>
 
@@ -123,7 +123,7 @@ export default function AddWorkForm() {
                             type="text" required
                             value={platform} onChange={e => setPlatform(e.target.value)}
                             className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-sakura focus:ring-2 focus:ring-sakura-light outline-none transition"
-                            placeholder="例如：晋江、Lofter"
+                            placeholder="例如：微博、Lofter、ao3、亚洲网、B站等"
                         />
                     </div>
 
@@ -133,7 +133,7 @@ export default function AddWorkForm() {
                             type="url" required
                             value={url} onChange={e => setUrl(e.target.value)}
                             className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-sakura focus:ring-2 focus:ring-sakura-light outline-none transition"
-                            placeholder="https://..."
+                            placeholder="一定得是有效连接格式，以 https:// 开头"
                         />
                     </div>
 
@@ -143,7 +143,7 @@ export default function AddWorkForm() {
                             value={summary} onChange={e => setSummary(e.target.value)}
                             rows={3}
                             className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-sakura focus:ring-2 focus:ring-sakura-light outline-none transition"
-                            placeholder="复制发表平台上的简介..."
+                            placeholder="可以复制发表平台上的简介..."
                         />
                     </div>
                 </div>
@@ -200,7 +200,7 @@ export default function AddWorkForm() {
                     disabled={submitting}
                     className="px-8 py-2.5 rounded-xl bg-gradient-to-r from-sakura to-pink-400 text-white shadow-md hover:shadow-lg hover:brightness-105 transition font-bold disabled:opacity-70 disabled:cursor-not-allowed"
                 >
-                    {submitting ? '提交中...' : '确认发布'}
+                    {submitting ? '添加中...' : '确认添加'}
                 </button>
             </div>
 
