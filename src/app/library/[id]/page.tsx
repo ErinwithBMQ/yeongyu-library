@@ -70,7 +70,7 @@ export default function WorkDetailPage({ params }: { params: Promise<{ id: strin
                 <div className="md:col-span-5 lg:col-span-4 space-y-6">
                     <div>
                         <div className="flex items-center gap-3 mb-4">
-                            <span className="inline-block px-3 py-1 bg-hwangchoon-light text-yellow-700 text-xs font-bold tracking-wider rounded border border-hwangchoon/20">
+                            <span className="inline-block px-3 py-1 bg-hwangchoon-light text-hwangchoon-dark text-xs font-bold tracking-wider rounded border border-hwangchoon/20">
                                 {work.platform}
                             </span>
                             <span className="text-sm text-gray-400">
@@ -112,13 +112,24 @@ export default function WorkDetailPage({ params }: { params: Promise<{ id: strin
                         </a>
 
                         {user && (
-                            <button
-                                onClick={() => setIsFavoriteModalOpen(true)}
-                                className="w-full flex items-center justify-center px-6 py-3 border border-bamguet-dark text-bamguet-dark font-bold rounded-lg hover:bg-bamguet-light transition-all active:scale-95"
-                            >
-                                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
-                                加入收藏
-                            </button>
+                            <>
+                                <div className='flex gap-3'>
+                                    <Link
+                                        href={`/library/${work.id}/edit`}
+                                        className="w-full flex items-center justify-center px-6 py-3 border border-gray-300 text-gray-700 font-bold rounded-lg hover:bg-gray-50 transition-all active:scale-95"
+                                    >
+                                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                                        编辑信息
+                                    </Link>
+                                    <button
+                                        onClick={() => setIsFavoriteModalOpen(true)}
+                                        className="w-full flex items-center justify-center px-6 py-3 border border-bamguet-dark text-bamguet-dark font-bold rounded-lg hover:bg-bamguet-light transition-all active:scale-95"
+                                    >
+                                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+                                        加入收藏
+                                    </button>
+                                </div>
+                            </>
                         )}
                     </div>
                 </div>

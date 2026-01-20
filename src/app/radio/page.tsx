@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { getRadioMessages, postRadioMessage, toggleReaction, getMessageReactions } from '@/services/radio';
 import { RadioMessage } from '@/types';
 import RadioMessageCard from '@/components/RadioMessageCard';
+import Pagination from '@/components/Pagination';
 import { toast } from 'sonner';
 // import { getWorks } from '@/services/works';
 
@@ -147,10 +148,11 @@ export default function RadioPage() {
 
     return (
         <div className="container mx-auto p-4 sm:p-8 max-w-6xl">
-            <header className="mb-8">
+            <header className="mb-5">
                 <h1 className="text-3xl sm:text-3xl font-bold text-bamguet-dark mb-2">真心定格电台</h1>
+                <p className="text-gray-600">电台来信、贴表情功能可能加载较慢，敬请谅解</p>
             </header>
-
+            <div className="border-b border-gray-200 my-5"></div>
             <div className="flex flex-col gap-10">
                 {/* 上方：留言列表 */}
                 <main className="w-full">
@@ -182,27 +184,12 @@ export default function RadioPage() {
                                 </div>
 
                                 {/* Pagination Controls */}
-                                {Math.ceil(total / pageSize) > 1 && (
-                                    <div className="mt-12 flex justify-center items-center gap-4">
-                                        <button
-                                            onClick={() => setPage(p => Math.max(1, p - 1))}
-                                            disabled={page === 1}
-                                            className="px-4 py-2 rounded-lg border border-gray-200 bg-white text-gray-600 disabled:opacity-50 hover:bg-gray-50 transition text-sm font-medium"
-                                        >
-                                            上一页
-                                        </button>
-                                        <span className="text-gray-400 font-medium text-xs">
-                                            Page {page} of {Math.ceil(total / pageSize)}
-                                        </span>
-                                        <button
-                                            onClick={() => setPage(p => Math.min(Math.ceil(total / pageSize), p + 1))}
-                                            disabled={page === Math.ceil(total / pageSize)}
-                                            className="px-4 py-2 rounded-lg border border-gray-200 bg-white text-gray-600 disabled:opacity-50 hover:bg-gray-50 transition text-sm font-medium"
-                                        >
-                                            下一页
-                                        </button>
-                                    </div>
-                                )}
+                                <Pagination
+                                    currentPage={page}
+                                    totalCount={total}
+                                    pageSize={pageSize}
+                                    onPageChange={setPage}
+                                />
                             </>
                         )}
                     </div>

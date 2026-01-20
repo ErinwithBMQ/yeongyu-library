@@ -165,6 +165,9 @@ export const getWorkById = async (id: number): Promise<WorkWithTags | null> => {
  * 注意：需要登录状态 (RLS会拦截)
  */
 export const createWork = async (params: CreateWorkParams) => {
+    // 获取当前用户ID作为提交者
+    const { data: { user } } = await supabase.auth.getUser();
+
     // 1. 插入 Works 表
     const { data: workData, error: workError } = await supabase
         .from('works')
@@ -173,7 +176,8 @@ export const createWork = async (params: CreateWorkParams) => {
             author_name: params.author_name,
             original_url: params.original_url,
             platform: params.platform,
-            summary: params.summary
+            summary: params.summary,
+            submitter_id: user?.id
         })
         .select()
         .single();
@@ -215,3 +219,56 @@ export const deleteWork = async (id: number) => {
     if (error) throw error;
     return true;
 };
+
+/**
+ * 更新作品信息
+ * 支持更新：original_url, platform, summary, tags
+ * 注意：title 和 author_name 通常不建议更改，除非特定需求
+ */
+export const updateWork = async (id: number, params: Partial<CreateWorkParams>) => {
+    // 1. 更新 Works 表基本字段
+    const updates: any = {};
+    if (params.original_url !== undefined) updates.original_url = params.original_url;
+    if (params.platform !== undefined) updates.platform = params.platform;
+    if (params.summary !== undefined) updates.summary = params.summary;
+    // 如果需要允许修改标题作者，也可以解开注释
+    // if (params.title !== undefined) updates.title = params.title;
+    // if (params.author_name !== undefined) updates.author_name = params.author_name;
+
+    if (Object.keys(updates).length > 0) {
+        const { error: workError } = await supabase
+            .from('works')
+            .update(updates)
+            .eq('id', id);
+
+        if (workError) throw workError;
+    }
+
+    // 2. 更新标签 (全量替换策略：先删后加)
+    if (params.tag_ids !== undefined) {
+        // 2.1 删除旧的关联
+        const { error: deleteTagsError } = await supabase
+            .from('work_tags')
+            .delete()
+            .eq('work_id', id);
+
+        if (deleteTagsError) throw deleteTagsError;
+
+        // 2.2 插入新的关联
+        if (params.tag_ids.length > 0) {
+            const workTagsInsert = params.tag_ids.map(tagId => ({
+                work_id: id,
+                tag_id: tagId
+            }));
+
+            const { error: insertTagsError } = await supabase
+                .from('work_tags')
+                .insert(workTagsInsert);
+
+            if (insertTagsError) throw insertTagsError;
+        }
+    }
+
+    return true;
+};
+

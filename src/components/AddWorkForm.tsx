@@ -3,23 +3,41 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { getTagsGroupedByCategory } from '@/services/tags';
-import { createWork } from '@/services/works';
-import { Tag } from '@/types';
+import { createWork, updateWork } from '@/services/works';
+import { Tag, WorkWithTags } from '@/types';
 import { toast } from 'sonner';
 
-export default function AddWorkForm() {
+interface AddWorkFormProps {
+    initialData?: WorkWithTags; // 编辑模式下的初始数据
+    isEditMode?: boolean;       // 是否为编辑模式
+}
+
+export default function AddWorkForm({ initialData, isEditMode = false }: AddWorkFormProps) {
     const router = useRouter();
     const [groupedTags, setGroupedTags] = useState<Record<string, Tag[]>>({});
     const [loadingTags, setLoadingTags] = useState(true);
     const [submitting, setSubmitting] = useState(false);
 
     // 表单状态
-    const [title, setTitle] = useState('');
-    const [author, setAuthor] = useState('');
-    const [url, setUrl] = useState('');
-    const [platform, setPlatform] = useState('');
-    const [summary, setSummary] = useState('');
-    const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
+    const [title, setTitle] = useState(initialData?.title || '');
+    const [author, setAuthor] = useState(initialData?.author_name || '');
+    const [url, setUrl] = useState(initialData?.original_url || '');
+    const [platform, setPlatform] = useState(initialData?.platform || '');
+    const [summary, setSummary] = useState(initialData?.summary || '');
+    const [selectedTagIds, setSelectedTagIds] = useState<number[]>(
+        initialData?.tags?.map(t => t.id) || []
+    );
+
+    useEffect(() => {
+        if (initialData) {
+            setTitle(initialData.title);
+            setAuthor(initialData.author_name);
+            setUrl(initialData.original_url);
+            setPlatform(initialData.platform);
+            setSummary(initialData.summary || '');
+            setSelectedTagIds(initialData.tags?.map(t => t.id) || []);
+        }
+    }, [initialData]);
 
     // 加载标签
     useEffect(() => {
@@ -50,6 +68,7 @@ export default function AddWorkForm() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        // 验证必填项 (如果是编辑模式，标题作者通常是只读的，但这里还是校验一下以防万一)
         if (!title || !author || !url || !platform) {
             toast.warning('请填写标星(*)的必填项');
             return;
@@ -57,20 +76,33 @@ export default function AddWorkForm() {
 
         setSubmitting(true);
         try {
-            await createWork({
-                title,
-                author_name: author,
-                original_url: url,
-                platform,
-                summary,
-                tag_ids: selectedTagIds
-            });
-            toast.success('作品添加成功！');
-            router.push('/library'); // 跳转回图书馆首页
-            router.refresh(); // 刷新数据
+            if (isEditMode && initialData) {
+                // 编辑模式 update
+                await updateWork(initialData.id, {
+                    original_url: url,
+                    platform,
+                    summary,
+                    tag_ids: selectedTagIds
+                });
+                toast.success('作品更新成功！');
+                router.push(`/library/${initialData.id}`);
+            } else {
+                // 创建模式 create
+                await createWork({
+                    title,
+                    author_name: author,
+                    original_url: url,
+                    platform,
+                    summary,
+                    tag_ids: selectedTagIds
+                });
+                toast.success('作品添加成功！');
+                router.push('/library');
+            }
+            router.refresh();
         } catch (error: any) {
             console.error('提交失败', error);
-            toast.error('提交失败: ' + (error.message || '未知错误'));
+            toast.error('操作失败: ' + (error.message || '未知错误'));
         } finally {
             setSubmitting(false);
         }
@@ -102,18 +134,21 @@ export default function AddWorkForm() {
                         <label className="block text-sm font-medium text-gray-700">作品名称 <span className="text-red-500">*</span></label>
                         <input
                             type="text" required
+                            disabled={isEditMode}
                             value={title} onChange={e => setTitle(e.target.value)}
-                            className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-sakura focus:ring-2 focus:ring-sakura-light outline-none transition"
+                            className={`w-full px-4 py-2 rounded-lg border border-gray-200 outline-none transition ${isEditMode ? 'bg-gray-100 text-gray-500 cursor-not-allowed' : 'focus:border-sakura focus:ring-2 focus:ring-sakura-light'}`}
                             placeholder="填写作品名称，不需要书名号"
                         />
+                        {isEditMode && <p className="text-xs text-gray-400">作品名称和作者暂不支持修改</p>}
                     </div>
 
                     <div className="space-y-2">
                         <label className="block text-sm font-medium text-gray-700">作者 <span className="text-red-500">*</span></label>
                         <input
                             type="text" required
+                            disabled={isEditMode}
                             value={author} onChange={e => setAuthor(e.target.value)}
-                            className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-sakura focus:ring-2 focus:ring-sakura-light outline-none transition"
+                            className={`w-full px-4 py-2 rounded-lg border border-gray-200 outline-none transition ${isEditMode ? 'bg-gray-100 text-gray-500 cursor-not-allowed' : 'focus:border-sakura focus:ring-2 focus:ring-sakura-light'}`}
                             placeholder="可以直接复制发表平台上的作者名"
                         />
                     </div>
@@ -201,7 +236,7 @@ export default function AddWorkForm() {
                     disabled={submitting}
                     className="px-8 py-2.5 rounded-xl bg-bamguet-dark text-white hover:brightness-110 transition font-bold disabled:opacity-70 disabled:cursor-not-allowed"
                 >
-                    {submitting ? '添加中...' : '确认添加'}
+                    {submitting ? '提交中...' : (isEditMode ? '保存修改' : '确认添加')}
                 </button>
             </div>
 

@@ -5,6 +5,7 @@ import { getWorks } from '@/services/works';
 import { getTagsGroupedByCategory } from '@/services/tags';
 import { WorkWithTags, Tag } from '@/types';
 import Link from 'next/link';
+import Pagination from './Pagination';
 
 export default function LibraryView() {
     const [works, setWorks] = useState<WorkWithTags[]>([]);
@@ -22,7 +23,7 @@ export default function LibraryView() {
     const [searchInputValue, setSearchInputValue] = useState('');
     const [appliedQuery, setAppliedQuery] = useState('');
 
-    const pageSize = 6; // 一页显示几个
+    const pageSize = 9; // 一页显示几个
 
     const categoryOrder = ['类型', '世界观', '篇幅', '进度', '情感', '剧情', '预警', '人设', '幻想', '特殊设定'];
 
@@ -268,7 +269,7 @@ export default function LibraryView() {
                             const typeTag = work.tags?.find(t => t.category === '类型');
                             return (
                                 <div key={work.id} className="group bg-white rounded-xl p-5  border border-gray-200 hover:border-bamguet transition-all flex flex-col h-full relative overflow-hidden">
-                                    
+
 
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex items-center gap-2">
@@ -314,27 +315,12 @@ export default function LibraryView() {
                 )}
 
                 {/* Pagination Controls */}
-                {totalPages > 1 && (
-                    <div className="mt-8 flex justify-center items-center gap-4">
-                        <button
-                            onClick={() => setPage(p => Math.max(1, p - 1))}
-                            disabled={page === 1}
-                            className="px-4 py-2 rounded-lg border border-gray-200 bg-white text-gray-600 disabled:opacity-50 hover:bg-gray-50 transition"
-                        >
-                            上一页
-                        </button>
-                        <span className="text-gray-500 font-medium">
-                            第 {page} 页 / 共 {totalPages} 页
-                        </span>
-                        <button
-                            onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-                            disabled={page === totalPages}
-                            className="px-4 py-2 rounded-lg border border-gray-200 bg-white text-gray-600 disabled:opacity-50 hover:bg-gray-50 transition"
-                        >
-                            下一页
-                        </button>
-                    </div>
-                )}
+                <Pagination
+                    currentPage={page}
+                    totalCount={total}
+                    pageSize={pageSize}
+                    onPageChange={setPage}
+                />
 
             </main>
         </div>
