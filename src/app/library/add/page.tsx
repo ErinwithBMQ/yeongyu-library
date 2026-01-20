@@ -24,9 +24,9 @@ export default function AddWorkPage() {
     }
 
     return (
-        <div className="container mx-auto p-4 sm:p-8 bg-gray-50 min-h-screen">
+        <div className="container mx-auto p-4 sm:p-8 min-h-screen">
             <header className="mb-8 max-w-4xl mx-auto">
-                <h1 className="text-3xl font-bold text-pink-600 mb-2">添加新作品</h1>
+                <h1 className="text-3xl font-bold text-bamguet-dark mb-2">添加新作品</h1>
                 <p className="text-gray-600">请小章鱼们注意，一经提交不可修改哦！</p>
             </header>
 

@@ -54,7 +54,7 @@ export default function WorkDetailPage({ params }: { params: Promise<{ id: strin
         <div className="container mx-auto p-4 sm:p-8 max-w-6xl">
             {/* 顶部导航 */}
             <div className="mb-8">
-                <Link href="/library" className="text-gray-400 hover:text-pink-400 transition inline-flex items-center gap-1 text-sm">
+                <Link href="/library" className="text-gray-400 hover:text-bamguet transition inline-flex items-center gap-1 text-sm">
                     &larr; 返回图书馆
                 </Link>
             </div>
@@ -64,7 +64,7 @@ export default function WorkDetailPage({ params }: { params: Promise<{ id: strin
                 <div className="md:col-span-5 lg:col-span-4 space-y-6">
                     <div>
                         <div className="flex items-center gap-3 mb-4">
-                            <span className="inline-block px-3 py-1 bg-mint-light text-teal-700 text-xs font-bold tracking-wider rounded border border-mint/20">
+                            <span className="inline-block px-3 py-1 bg-hwangchoon-light text-yellow-700 text-xs font-bold tracking-wider rounded border border-hwangchoon/20">
                                 {work.platform}
                             </span>
                             <span className="text-sm text-gray-400">
@@ -78,7 +78,7 @@ export default function WorkDetailPage({ params }: { params: Promise<{ id: strin
 
                         <div className="text-lg text-gray-600 mb-6">
                             <span className="text-gray-400 text-sm block mb-1">Author</span>
-                            <span className="font-medium text-gray-900 border-b-2 border-pink-100 pb-0.5">{work.author_name}</span>
+                            <span className="font-medium text-gray-900 border-b-2 border-bamguet pb-0.5">{work.author_name}</span>
                         </div>
                     </div>
 
@@ -86,7 +86,7 @@ export default function WorkDetailPage({ params }: { params: Promise<{ id: strin
                     <div>
                         <div className="flex flex-wrap gap-2">
                             {work.tags && work.tags.map(tag => (
-                                <span key={tag.id} className="px-3 py-1.5 bg-white text-gray-600 rounded text-sm border border-gray-200 hover:border-mint hover:text-teal-600 transition-colors cursor-default">
+                                <span key={tag.id} className="px-3 py-1.5 bg-white text-gray-600 rounded text-sm border border-gray-200 hover:border-mint hover:text-hwangchoon-dark transition-colors cursor-default">
                                     # {tag.name}
                                 </span>
                             ))}
@@ -99,7 +99,7 @@ export default function WorkDetailPage({ params }: { params: Promise<{ id: strin
                         <a
                             href={work.original_url}
                             target="_blank"
-                            className="w-full flex items-center justify-center px-6 py-3 bg-pink-400 hover:bg-pink-500 text-white font-bold rounded-lg shadow-sm transition-all active:scale-95 hover:shadow-md"
+                            className="w-full flex items-center justify-center px-6 py-3 bg-bamguet-dark hover:bg-bamguet text-white font-bold rounded-lg transition-all active:scale-95"
                         >
                             点击直达
                             <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
@@ -108,7 +108,7 @@ export default function WorkDetailPage({ params }: { params: Promise<{ id: strin
                         {user && (
                             <button
                                 onClick={() => setIsFavoriteModalOpen(true)}
-                                className="w-full flex items-center justify-center px-6 py-3 border border-pink-200 text-pink-500 font-bold rounded-lg hover:bg-pink-50 transition-all active:scale-95"
+                                className="w-full flex items-center justify-center px-6 py-3 border border-bamguet-dark text-bamguet-dark font-bold rounded-lg hover:bg-bamguet-light transition-all active:scale-95"
                             >
                                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
                                 加入收藏
@@ -119,7 +119,7 @@ export default function WorkDetailPage({ params }: { params: Promise<{ id: strin
 
                 {/* 右侧：文章介绍 */}
                 <div className="md:col-span-7 lg:col-span-8">
-                    <div className="bg-white border border-gray-200 rounded-lg p-6 sm:p-8 hover:shadow-sm transition-shadow">
+                    <div className="bg-white border border-gray-200 rounded-lg p-6 sm:p-8 transition-shadow">
                         <div className="mb-6 pb-2 border-b border-gray-100 flex items-center justify-between">
                             <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">
                                 <span className="w-1.5 h-1.5 rounded-full bg-mint"></span>

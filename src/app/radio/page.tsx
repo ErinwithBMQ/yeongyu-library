@@ -37,8 +37,7 @@ export default function RadioPage() {
     // Filter & Pagination & UI States
     const [page, setPage] = useState(1);
     const [total, setTotal] = useState(0);
-    const pageSize = 6;
-    const [isFormExpanded, setIsFormExpanded] = useState(false);
+    const pageSize = 8;
 
     useEffect(() => {
         if (!loading && !user) {
@@ -148,101 +147,20 @@ export default function RadioPage() {
     return (
         <div className="container mx-auto p-4 sm:p-8 max-w-6xl">
             <header className="mb-8">
-                <h1 className="text-3xl sm:text-3xl font-bold text-teal-500 mb-2">真心定格电台</h1>
-                <p className="text-gray-600">有什么想说的话都可以在这里留下来~</p>
+                <h1 className="text-3xl sm:text-3xl font-bold text-bamguet-dark mb-2">真心定格电台</h1>
             </header>
 
-            <div className="flex flex-col lg:flex-row gap-6 items-start">
-                {/* 左侧：发送留言表单 (侧边栏模式) */}
-                <aside className={`flex-shrink-0 transition-all duration-500 ease-in-out ${isFormExpanded ? 'lg:w-80' : 'lg:w-16'} sticky top-4 z-20`}>
-                    <div className={`
-                        border shadow-sm overflow-hidden transition-all relative
-                        ${isFormExpanded
-                            ? 'rounded-xl bg-gradient-to-br from-pink-50/80 to-mint-50/80 border-pink-200/50 p-5'
-                            : 'rounded-full w-12 h-12 flex items-center justify-center bg-white border-gray-200 hover:bg-pink-50 hover:border-pink-300 hover:text-pink-500 cursor-pointer mx-auto mt-2'
-                        }
-                    `}
-                        onClick={() => !isFormExpanded && setIsFormExpanded(true)}
-                        title={!isFormExpanded ? "写留言" : ""}
-                    >
-                        {/* 顶部控制栏 */}
-                        <div className={`flex items-center ${isFormExpanded ? 'justify-between mb-6' : 'justify-center w-full h-full'}`}>
-                            {isFormExpanded ? (
-                                <h2 className="text-lg font-bold text-teal-700">我要留言</h2>
-                            ) : (
-                                // 收起状态：显示笔图标
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9" /><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" /></svg>
-                            )}
-
-                            {isFormExpanded && (
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        setIsFormExpanded(!isFormExpanded);
-                                    }}
-                                    className="p-2 rounded-lg hover:bg-black/5 text-gray-500 transition-colors"
-                                    title="收起"
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 12l12 6" /></svg>
-                                </button>
-                            )}
-                        </div>
-
-                        {/* 表单内容 */}
-                        {isFormExpanded && (
-                            <div className="animate-in slide-in-from-left-2 fade-in duration-300">
-                                {/* 昵称输入 */}
-                                <div className="mb-4">
-                                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                                        昵称
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={nickname}
-                                        onChange={(e) => setNickname(e.target.value)}
-                                        className="w-full rounded-lg border-gray-200 p-2.5 focus:ring-2 focus:ring-mint focus:border-mint text-sm bg-white"
-                                        placeholder="给自己起个可爱的名字..."
-                                        maxLength={20}
-                                    />
-                                </div>
-
-                                {/* 内容输入 */}
-                                <div className="mb-5">
-                                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                                        内容 <span className="text-xs text-gray-400 font-normal">({content.length}字)</span>
-                                    </label>
-                                    <textarea
-                                        value={content}
-                                        onChange={(e) => setContent(e.target.value)}
-                                        className="w-full h-48 rounded-lg border-gray-200 p-2.5 focus:ring-2 focus:ring-mint focus:border-mint resize-none text-sm bg-white leading-relaxed"
-                                        placeholder="写下你想说的话..."
-                                    ></textarea>
-                                </div>
-
-                                {/* 提交按钮 */}
-                                <button
-                                    onClick={handleSubmit}
-                                    disabled={submitting}
-                                    className="w-full px-4 py-2.5 bg-gradient-to-r from-pink-400 to-teal-400 text-white font-bold rounded-lg shadow-sm hover:shadow-md transition active:translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-                                >
-                                    {submitting ? '投递中...' : '📮 投递留言'}
-                                </button>
-                            </div>
-                        )}
-                    </div>
-                </aside>
-
-                {/* 右侧：留言列表 */}
-                <main className="flex-1 w-full">
-                    <div className="bg-white rounded-xl p-6 md:p-8 shadow-sm border border-gray-100 min-h-[500px]">
+            <div className="flex flex-col gap-10">
+                {/* 上方：留言列表 */}
+                <main className="w-full">
+                    <div className="">
                         <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-50">
-                            <h2 className="text-xl font-bold text-gray-700">最新回声</h2>
-                            <span className="text-sm text-gray-400 bg-gray-50 px-2 py-0.5 rounded-md">共 {total} 条</span>
+                            <div className="text-gray-500">电台当前共收到 <div className="inline text-bamguet-dark font-bold">{total}</div> 条留言/来信，持续接收中...</div>
                         </div>
 
                         {loadingMessages ? (
                             <div className="text-center text-gray-400 py-20">
-                                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-teal-500 mx-auto mb-4"></div>
+                                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-hwangchoon-dark mx-auto mb-4"></div>
                                 <p className="text-sm">接收电波中...</p>
                             </div>
                         ) : messages.length === 0 ? (
@@ -251,7 +169,7 @@ export default function RadioPage() {
                             </div>
                         ) : (
                             <>
-                                <div className="columns-1 md:columns-2 gap-5 space-y-5">
+                                <div className="columns-1 md:columns-2 lg:columns-3 gap-5 space-y-5">
                                     {messages.map(msg => (
                                         <div key={msg.id} className="break-inside-avoid">
                                             <RadioMessageCard
@@ -288,6 +206,69 @@ export default function RadioPage() {
                         )}
                     </div>
                 </main>
+
+                {/* 下方：发送留言表单 */}
+                <div className="w-full max-w-5xl mx-auto py-12">
+                    <div className="flex flex-col md:flex-row gap-10 md:gap-20 items-start">
+                        {/* 左侧：大标题 */}
+                        <div className="md:w-1/3 pt-2">
+                            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 leading-tight">
+                                在这里留下<br className="hidden md:block" />你想说的话吧
+                            </h2>
+                            <div className="mt-5 text-gray-500">希望你的今日也是开心的一天！</div>
+                        </div>
+
+                        {/* 右侧：表单 */}
+                        <div className="flex-1 w-full animate-in slide-in-from-bottom-2 fade-in duration-500">
+                            {/* 昵称输入 */}
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                                    昵称
+                                </label>
+                                <input
+                                    type="text"
+                                    value={nickname}
+                                    onChange={(e) => setNickname(e.target.value)}
+                                    className="w-full rounded-md border-gray-200 p-3 focus:ring-2 focus:ring-gray-400 focus:border-transparent text-sm bg-gray-50 transition-all"
+                                    placeholder="给自己起个可爱的名字..."
+                                    maxLength={20}
+                                />
+                            </div>
+
+                            {/* 内容输入 */}
+                            <div className="mb-6">
+                                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                                    内容 <span className="text-xs text-gray-400 font-normal">({content.length}字)</span>
+                                </label>
+                                <textarea
+                                    value={content}
+                                    onChange={(e) => setContent(e.target.value)}
+                                    className="w-full h-32 md:h-40 rounded-md border-gray-200 p-3 focus:ring-2 focus:ring-gray-400 focus:border-transparent resize-none text-sm bg-gray-50 leading-relaxed"
+                                    placeholder="写下你想说的话..."
+                                ></textarea>
+                            </div>
+
+                            {/* 提交按钮 */}
+                            <button
+                                onClick={handleSubmit}
+                                disabled={submitting}
+                                className="w-full md:w-auto px-8 py-3 bg-bamguet-dark text-white font-medium rounded-md hover:bg-bamguet transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed text-base flex justify-center items-center gap-2"
+                            >
+                                {submitting ? (
+                                    <>
+                                        <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        <span>投递中...</span>
+                                    </>
+                                ) : (
+                                    <span>投递留言</span>
+                                )}
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );

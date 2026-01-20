@@ -3,19 +3,38 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --sakura: #FFC4D6;
+  --sakura: #ffc4c4;
   --sakura-light: #FFF0F5;
-  --mint: #A0E8AF;
-  --mint-light: #E0F8E5;
+  --mint: #a0e8ca;
+  --mint-light: #e0f8ee;
+  --hwangchoon: #ffbd80ea;
+  --hwangchoon-light: #fff4e1;
+  --hwangchoon-dark: #ea7916;
+  --bamguet: #ffbfbf;
+  --bamguet-light: #fff0f0;
+  --bamguet-dark: #c7414a;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-sakura: var(--sakura);
-  --color-sakura-light: var(--sakura-light);
-  --color-mint: var(--mint);
-  --color-mint-light: var(--mint-light);
+
+  /* 将 sakura 映射为 bamguet (淡红) */
+  --color-sakura: var(--bamguet);
+  --color-sakura-light: var(--bamguet-light);
+
+  /* 将 mint 映射为 hwangchoon (黄) */
+  --color-mint: var(--hwangchoon);
+  --color-mint-light: var(--hwangchoon-light);
+
+  /* 同时注册新颜色的名字，以便后续直接使用 */
+  --color-hwangchoon: var(--hwangchoon);
+  --color-hwangchoon-light: var(--hwangchoon-light);
+  --color-hwangchoon-dark: var(--hwangchoon-dark);
+  --color-bamguet: var(--bamguet);
+  --color-bamguet-light: var(--bamguet-light);
+  --color-bamguet-dark: var(--bamguet-dark);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }

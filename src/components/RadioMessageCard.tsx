@@ -25,7 +25,7 @@ const EMOJI_OPTIONS = ['❤️', '😭', '😂', '👍', '🎉', '💕'];
 export default function RadioMessageCard({ message, onReact }: RadioMessageCardProps) {
     const [expanded, setExpanded] = useState(false);
     const isShort = message.content.length <= 150;
-    const messageType = isShort ? '碎碎念' : '来信';
+    const messageType = isShort ? '留言' : '来信';
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
     // 信封模式下截取前150字
@@ -37,9 +37,9 @@ export default function RadioMessageCard({ message, onReact }: RadioMessageCardP
     return (
         <div
             className={`relative ${isShort
-                ? 'bg-gradient-to-br from-pink-100 to-pink-50 border-pink-200'
-                : 'bg-white border-gray-200'
-                } border rounded-lg p-4 shadow-sm hover:shadow-md transition-all`}
+                ? 'bg-sakura-light border-sakura'
+                : 'bg-hwangchoon-light border-hwangchoon'
+                } border rounded-lg p-4 transition-all`}
         >
             {/* 头部：昵称 + 类型标签 */}
             <div className="flex items-center justify-between mb-3">
@@ -69,7 +69,7 @@ export default function RadioMessageCard({ message, onReact }: RadioMessageCardP
                         </p>
                         <button
                             onClick={() => setExpanded(!expanded)}
-                            className="text-sm text-teal-600 hover:text-teal-700 mt-2 font-medium"
+                            className="text-sm text-hwangchoon-dark hover:text-hwangchoon mt-2 font-medium"
                         >
                             {expanded ? '收起' : '展开阅读'}
                         </button>

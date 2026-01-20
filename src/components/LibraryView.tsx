@@ -100,7 +100,7 @@ export default function LibraryView() {
         <div className="flex flex-col lg:flex-row gap-8">
             {/* Left Sidebar: Filters */}
             <aside className={`flex-shrink-0 transition-all duration-300 ${isSidebarOpen ? 'lg:w-64' : 'lg:w-12'}`}>
-                <div className={`bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden ${isSidebarOpen ? 'p-4' : 'p-2'}`}>
+                <div className={`bg-white rounded-xl border border-gray-200 overflow-hidden ${isSidebarOpen ? 'p-4' : 'p-2'}`}>
                     <div className={`flex items-center ${isSidebarOpen ? 'justify-between mb-4' : 'justify-center flex-col gap-4'}`}>
                         {isSidebarOpen && <h2 className="font-bold text-gray-700">标签筛选</h2>}
 
@@ -119,7 +119,7 @@ export default function LibraryView() {
                         {isSidebarOpen && selectedTagIds.length > 0 && (
                             <button
                                 onClick={() => setSelectedTagIds([])}
-                                className="text-xs text-pink-500 hover:underline"
+                                className="text-xs text-bamguet-dark hover:underline"
                             >
                                 清除
                             </button>
@@ -141,8 +141,8 @@ export default function LibraryView() {
                                                     className={`
                             text-xs px-2.5 py-1 rounded-full transition-all border
                             ${isSelected
-                                                            ? 'bg-pink-500 text-white border-pink-500 shadow-sm scale-105'
-                                                            : 'bg-gray-50 text-gray-600 border-gray-100 hover:bg-white hover:border-pink-300'
+                                                            ? 'bg-bamguet-dark text-white border-bamguet-dark scale-105'
+                                                            : 'bg-gray-50 text-gray-600 border-gray-100 hover:bg-white hover:border-bamguet-light'
                                                         }
                         `}
                                                 >
@@ -163,7 +163,7 @@ export default function LibraryView() {
 
                 {/* Status Bar / Search Bar */}
                 <div
-                    className={`mb-4 flex items-center justify-between text-sm bg-white rounded-lg border shadow-sm transition-all duration-300 ${isSearchMode ? 'ring-2 ring-pink-200 border-pink-300 py-2 px-3' : 'border-gray-100 py-3 px-4 hover:border-pink-200 cursor-text'}`}
+                    className={`mb-4 flex items-center justify-between text-sm bg-white rounded-lg border border-gray-200 transition-all duration-300 ${isSearchMode ? 'ring-2 ring-bamguet border-bamguet py-2 px-3' : 'border-gray-100 py-3 px-4 hover:border-bamguet cursor-text'}`}
                     onClick={() => {
                         if (!isSearchMode) {
                             setIsSearchMode(true);
@@ -206,7 +206,7 @@ export default function LibraryView() {
                                     e.stopPropagation();
                                     handleSearch();
                                 }}
-                                className="ml-2 px-3 py-1 bg-pink-500 text-white rounded-md text-xs font-bold shadow-sm hover:bg-pink-600 transition"
+                                className="ml-2 px-3 py-1 bg-bamguet-dark text-white rounded-md text-xs font-bold hover:bg-bamguet transition"
                             >
                                 搜索
                             </button>
@@ -231,7 +231,7 @@ export default function LibraryView() {
                                         {selectedTagIds.map(id => {
                                             const tag = Object.values(groupedTags).flat().find(t => t.id === id);
                                             return tag ? (
-                                                <span key={id} className="bg-pink-100 text-pink-700 px-2 py-0.5 rounded-full text-xs font-medium">#{tag.name}</span>
+                                                <span key={id} className="bg-bamguet-light text-bamguet-dark px-2 py-0.5 rounded-full text-xs font-medium">#{tag.name}</span>
                                             ) : null;
                                         })}
                                     </span>
@@ -256,7 +256,7 @@ export default function LibraryView() {
                                     setSelectedTagIds([]);
                                     clearSearch();
                                 }}
-                                className="mt-2 text-pink-500 hover:underline"
+                                className="mt-2 text-bamguet-dark hover:underline"
                             >
                                 清除所有筛选
                             </button>
@@ -267,27 +267,26 @@ export default function LibraryView() {
                         {works.map(work => {
                             const typeTag = work.tags?.find(t => t.category === '类型');
                             return (
-                                <div key={work.id} className="group bg-white rounded-xl p-5 shadow-sm border border-gray-100 hover:shadow-md hover:border-pink-100 transition-all flex flex-col h-full relative overflow-hidden">
-                                    {/* Decoration: Top colored line */}
-                                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-pink-200 to-mint-200"></div>
+                                <div key={work.id} className="group bg-white rounded-xl p-5  border border-gray-200 hover:border-bamguet transition-all flex flex-col h-full relative overflow-hidden">
+                                    
 
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex items-center gap-2">
                                             {typeTag && (
-                                                <span className="text-xs font-medium bg-pink-50 text-pink-600 border border-pink-100 px-2 py-1 rounded">
+                                                <span className="text-xs font-medium bg-bamguet-light text-bamguet-dark px-2 py-1 rounded">
                                                     {typeTag.name}
                                                 </span>
                                             )}
-                                            <span className="text-xs font-medium bg-mint-light text-teal-700 px-2 py-1 rounded">
+                                            <span className="text-xs font-medium bg-hwangchoon-light text-hwangchoon-dark px-2 py-1 rounded">
                                                 {work.platform || '未知平台'}
                                             </span>
                                         </div>
-                                        <a href={work.original_url} target="_blank" className="text-gray-300 hover:text-pink-500 transition-colors" title="直达原址">
+                                        <a href={work.original_url} target="_blank" className="text-gray-300 hover:text-bamguet-dark transition-colors" title="直达原址">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-external-link"><path d="M15 3h6v6" /><path d="M10 14 21 3" /><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></svg>
                                         </a>
                                     </div>
 
-                                    <h3 className="font-bold text-gray-800 text-lg mb-1 group-hover:text-pink-600 transition-colors line-clamp-1">
+                                    <h3 className="font-bold text-gray-800 text-lg mb-1 group-hover:text-bamguet-dark transition-colors line-clamp-1">
                                         <Link href={`/library/${work.id}`}>{work.title}</Link>
                                     </h3>
                                     <div className="text-sm text-gray-500 mb-3">作者：{work.author_name}</div>

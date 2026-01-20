@@ -128,7 +128,7 @@ export default function FavoritesPage() {
     return (
         <div className="container mx-auto p-4 sm:p-8 max-w-6xl min-h-[calc(100vh-200px)]">
             <header className="mb-8">
-                <h1 className="text-3xl font-bold text-pink-500 mb-2">我的收藏夹</h1>
+                <h1 className="text-3xl font-bold text-bamguet-dark mb-2">我的收藏夹</h1>
             </header>
 
             <div className="grid lg:grid-cols-4 gap-8">
@@ -138,7 +138,7 @@ export default function FavoritesPage() {
                         <h2 className="font-semibold text-gray-700">文件夹</h2>
                         <button
                             onClick={() => setIsCreating(!isCreating)}
-                            className="text-pink-500 hover:bg-pink-50 p-1 rounded-md transition"
+                            className="text-bamguet-dark hover:bg-bamguet-light p-1 rounded-md transition"
                             title="新建收藏夹"
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
@@ -152,7 +152,7 @@ export default function FavoritesPage() {
                                 value={newFolderName}
                                 onChange={(e) => setNewFolderName(e.target.value)}
                                 placeholder="输入文件夹名称..."
-                                className="w-full px-3 py-2 border border-pink-200 rounded-lg text-sm focus:ring-2 focus:ring-pink-300 outline-none mb-2"
+                                className="w-full px-3 py-2 border border-bamguet-light rounded-lg text-sm focus:ring-2 focus:ring-bamguet-light outline-none mb-2"
                                 autoFocus
                                 onKeyDown={(e) => e.key === 'Enter' && handleCreateFolder()}
                             />
@@ -160,7 +160,7 @@ export default function FavoritesPage() {
                                 <button onClick={() => setIsCreating(false)} className="text-xs text-gray-500 hover:text-gray-700">取消</button>
                                 <button
                                     onClick={handleCreateFolder}
-                                    className="px-3 py-1 bg-pink-400 text-white text-xs rounded-md hover:bg-pink-500"
+                                    className="px-3 py-1 bg-bamguet-dark text-white text-xs rounded-md hover:bg-bamguet"
                                     disabled={!newFolderName.trim()}
                                 >
                                     创建
@@ -184,12 +184,12 @@ export default function FavoritesPage() {
                                     key={folder.id}
                                     onClick={() => setSelectedFolderId(folder.id)}
                                     className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all text-left group ${selectedFolderId === folder.id
-                                            ? 'bg-gradient-to-r from-pink-400 to-pink-500 text-white shadow-md'
-                                            : 'bg-white hover:bg-pink-50 text-gray-700'
+                                            ? 'bg-bamguet-dark text-white'
+                                            : 'bg-white hover:bg-bamguet-light text-gray-700'
                                         }`}
                                 >
                                     <div className="flex items-center gap-3 truncate">
-                                        <svg className={`w-5 h-5 flex-shrink-0 ${selectedFolderId === folder.id ? 'text-white' : 'text-pink-300'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" /></svg>
+                                        <svg className={`w-5 h-5 flex-shrink-0 ${selectedFolderId === folder.id ? 'text-white' : 'text-bamguet'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" /></svg>
                                         <span className="font-medium truncate">{folder.name}</span>
                                     </div>
                                 </button>
@@ -206,7 +206,7 @@ export default function FavoritesPage() {
                             <p>选择左侧文件夹查看收藏</p>
                         </div>
                     ) : (
-                        <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 min-h-full">
+                        <div className="bg-white rounded-2xl border border-gray-200 p-6 min-h-full">
                             <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-50">
                                 <div>
                                     <h2 className="text-2xl font-bold text-gray-800">{selectedFolder?.name}</h2>
@@ -223,21 +223,21 @@ export default function FavoritesPage() {
 
                             {loadingWorks ? (
                                 <div className="text-center py-12">
-                                    <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-pink-400 mx-auto mb-4"></div>
+                                    <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-bamguet mx-auto mb-4"></div>
                                     <p className="text-gray-400">正在搬运书本...</p>
                                 </div>
                             ) : works.length === 0 ? (
                                 <div className="text-center py-16 text-gray-400">
                                     <p className="text-lg">这里空空如也</p>
                                     <p className="text-sm mt-2">快去图书馆添加喜欢的作品吧</p>
-                                    <Link href="/library" className="mt-6 inline-block px-6 py-2 bg-mint/20 text-teal-700 rounded-full hover:bg-mint/30 transition">
+                                    <Link href="/library" className="mt-6 inline-block px-6 py-2 bg-bamguet-light text-bamguet-dark rounded-xl hover:bg-bamguet transition">
                                         前往图书馆
                                     </Link>
                                 </div>
                             ) : (
                                 <div className="grid md:grid-cols-2 gap-4">
                                     {works.map((work) => (
-                                        <div key={work.id} className="group relative bg-gray-50 hover:bg-white border border-gray-100 hover:border-pink-200 rounded-xl p-4 transition-all hover:shadow-md">
+                                        <div key={work.id} className="group relative bg-gray-50 hover:bg-white border border-gray-100 hover:border-bamguet rounded-xl p-4 transition-all">
                                             <div className="flex justify-between items-start mb-2">
                                                 <span className="px-2 py-1 bg-white text-xs font-semibold text-gray-500 rounded border border-gray-100">
                                                     {work.platform}

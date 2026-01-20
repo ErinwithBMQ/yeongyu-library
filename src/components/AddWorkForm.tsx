@@ -90,7 +90,7 @@ export default function AddWorkForm() {
     }
 
     return (
-        <form onSubmit={handleSubmit} className="max-w-4xl mx-auto space-y-8 bg-white p-6 sm:p-10 rounded-2xl shadow-sm border border-sakura/20">
+        <form onSubmit={handleSubmit} className="max-w-4xl mx-auto space-y-8 bg-white p-6 sm:p-10 rounded-2xl border border-sakura/50">
 
             {/* 1. 基本信息区域 */}
             <section className="space-y-6">
@@ -133,7 +133,7 @@ export default function AddWorkForm() {
                             type="url" required
                             value={url} onChange={e => setUrl(e.target.value)}
                             className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-sakura focus:ring-2 focus:ring-sakura-light outline-none transition"
-                            placeholder="一定得是有效连接格式，以 https:// 开头"
+                            placeholder="有效连接格式，以 https:// 开头"
                         />
                     </div>
 
@@ -171,8 +171,8 @@ export default function AddWorkForm() {
                                             className={`
                         px-3 py-1.5 rounded-full text-sm transition-all duration-200 border
                         ${isSelected
-                                                    ? 'bg-sakura text-pink-900 border-sakura font-medium shadow-sm scale-105'
-                                                    : 'bg-white text-gray-600 border-gray-200 hover:border-sakura hover:text-pink-600'
+                                                    ? 'bg-sakura-light text-bamguet-dark border-sakura font-medium scale-105'
+                                                    : 'bg-white text-gray-600 border-gray-200 hover:border-sakura hover:text-bamguet-dark'
                                                 }
                       `}
                                         >
@@ -198,7 +198,7 @@ export default function AddWorkForm() {
                 <button
                     type="submit"
                     disabled={submitting}
-                    className="px-8 py-2.5 rounded-xl bg-gradient-to-r from-sakura to-pink-400 text-white shadow-md hover:shadow-lg hover:brightness-105 transition font-bold disabled:opacity-70 disabled:cursor-not-allowed"
+                    className="px-8 py-2.5 rounded-xl bg-bamguet-dark text-white hover:brightness-110 transition font-bold disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                     {submitting ? '添加中...' : '确认添加'}
                 </button>

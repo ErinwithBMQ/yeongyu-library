@@ -70,7 +70,7 @@ export default function MePage() {
 
             <div className="space-y-6">
                 {/* User Info Card */}
-                <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex items-center gap-4">
+                <div className="bg-white rounded-2xl p-6 border border-gray-200 flex items-center gap-4">
                     <div className="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center text-3xl">
                         🐙
                     </div>
@@ -83,7 +83,7 @@ export default function MePage() {
                 </div>
 
                 {/* Change Password Card */}
-                <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                <div className="bg-white rounded-2xl p-6 border border-gray-200">
                     <h3 className="text-lg font-bold text-gray-700 mb-4 border-b border-gray-50 pb-2">修改密码</h3>
 
                     {message && (
@@ -118,7 +118,7 @@ export default function MePage() {
                         <button
                             type="submit"
                             disabled={isUpdating || !newPassword}
-                            className="px-6 py-2 bg-pink-500 text-white rounded-lg font-medium hover:bg-pink-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="px-6 py-2 bg-bamguet text-white rounded-lg font-medium hover:bg-bamguet-dark transition disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {isUpdating ? '修改中...' : '确认修改'}
                         </button>
@@ -126,7 +126,7 @@ export default function MePage() {
                 </div>
 
                 {/* Logout Button */}
-                <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                <div className="bg-white rounded-2xl p-6 border border-gray-200">
                     <h3 className="text-lg font-bold text-gray-700 mb-4 border-b border-gray-50 pb-2">账号操作</h3>
                     <button
                         onClick={handleLogout}
