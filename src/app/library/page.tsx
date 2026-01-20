@@ -11,7 +11,7 @@ export default function LibraryPage() {
         <div className="container mx-auto p-4 sm:p-8">
             <header className="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-bamguet-dark mb-2">图书馆</h1>
+                    <h1 className="text-2xl font-bold text-bamguet-dark mb-2">图书馆</h1>
                     <p className="text-gray-600">这里是产出整理站，可以通过选择标签进行筛选，也可以使用搜索功能。</p>
                 </div>
                 {user && (

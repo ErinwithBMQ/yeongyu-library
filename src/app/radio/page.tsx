@@ -149,15 +149,15 @@ export default function RadioPage() {
     return (
         <div className="container mx-auto p-4 sm:p-8 max-w-6xl">
             <header className="mb-5">
-                <h1 className="text-3xl sm:text-3xl font-bold text-bamguet-dark mb-2">真心定格电台</h1>
-                <p className="text-gray-600">电台来信、贴表情功能可能加载较慢，敬请谅解</p>
+                <h1 className="text-2xl sm:text-2xl font-bold text-bamguet-dark mb-2">真心定格电台</h1>
+                <p className="text-gray-500">电台来信、贴表情等功能可能加载较慢，敬请谅解</p>
             </header>
             <div className="border-b border-gray-200 my-5"></div>
             <div className="flex flex-col gap-10">
                 {/* 上方：留言列表 */}
                 <main className="w-full">
                     <div className="">
-                        <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-50">
+                        <div className="flex items-center gap-3 mb-5 pb-4 border-b border-gray-50">
                             <div className="text-gray-500">电台当前共收到 <div className="inline text-bamguet-dark font-bold">{total}</div> 条留言/来信，持续接收中...</div>
                         </div>
 

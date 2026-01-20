@@ -70,7 +70,7 @@ export default function MePage() {
 
     return (
         <div className="container mx-auto p-4 sm:p-8 max-w-2xl min-h-[70vh]">
-            <h1 className="text-3xl font-bold text-gray-800 mb-8">个人中心</h1>
+            <h1 className="text-2xl font-bold text-gray-800 mb-8">个人中心</h1>
 
             <div className="space-y-6">
                 {/* User Info Card */}
