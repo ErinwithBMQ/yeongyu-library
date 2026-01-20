@@ -18,9 +18,9 @@ export default function Navbar() {
         const controlNavbar = () => {
             const currentScrollY = window.scrollY;
 
-            // 向下滚动超过100px且当前位置大于上次位置 -> 隐藏
+            // 向下滚动超过70px且当前位置大于上次位置 -> 隐藏
             // 向上滚动 -> 显示
-            if (currentScrollY > lastScrollY && currentScrollY > 100) {
+            if (currentScrollY > lastScrollY && currentScrollY > 70) {
                 setIsVisible(false);
             } else {
                 setIsVisible(true);
@@ -47,13 +47,13 @@ export default function Navbar() {
     };
 
     return (
-        <nav className={`flex items-center justify-between p-4 bg-bamguet-light/70 backdrop-blur-sm sticky top-0 z-50 border-b border-bamguet-light transition-transform duration-300 ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}>
+        <nav className={`flex items-center justify-between px-4 py-3 shadow bg-bamguet-light/70 backdrop-blur-sm sticky top-0 z-50 border-b border-bamguet-light transition-transform duration-300 ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}>
             <div className="text-xl font-bold text-bamguet-dark">
                 <Link href="/">🐙小章鱼存档地</Link>
             </div>
             <div className="flex gap-6 items-center">
                 <Link href="/library" className="group flex flex-col items-center gap-0.5 text-xs font-medium text-gray-600 hover:text-bamguet-dark transition-colors">
-                    <LibraryBig className="w-6 h-6 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
+                    <LibraryBig className="w-5 h-5 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
                     <span>图书馆</span>
                 </Link>
                 {loading ? (
@@ -62,15 +62,15 @@ export default function Navbar() {
                 ) : user ? (
                     <>
                         <Link href="/radio" className="group flex flex-col items-center gap-0.5 text-xs font-medium text-gray-600 hover:text-hwangchoon-dark transition-colors">
-                            <Radio className="w-6 h-6 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
+                            <Radio className="w-5 h-5 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
                             <span>电台</span>
                         </Link>
                         <Link href="/favorites" className="group flex flex-col items-center gap-0.5 text-xs font-medium text-gray-600 hover:text-bamguet-dark transition-colors">
-                            <Heart className="w-6 h-6 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
+                            <Heart className="w-5 h-5 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
                             <span>收藏夹</span>
                         </Link>
                         <Link href="/me" className="group flex flex-col items-center gap-0.5 text-xs font-medium text-gray-600 hover:text-hwangchoon-dark transition-colors">
-                            <User className="w-6 h-6 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
+                            <User className="w-5 h-5 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
                             <span>我</span>
                         </Link>
                         {/* Optionally add a logout button here or keep it in "Me" page, asking for "Navbar" changes usually implies visibility of main links */}
