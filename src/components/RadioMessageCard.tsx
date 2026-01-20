@@ -126,7 +126,7 @@ export default function RadioMessageCard({ message, onReact }: RadioMessageCardP
                         +
                     </button>
                     {showEmojiPicker && (
-                        <div className="absolute left-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg p-2 flex gap-1 z-10">
+                        <div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 bg-white border border-gray-200 rounded-lg shadow-lg p-2 flex gap-1 z-10 w-max">
                             {EMOJI_OPTIONS.map((emoji) => (
                                 <button
                                     key={emoji}

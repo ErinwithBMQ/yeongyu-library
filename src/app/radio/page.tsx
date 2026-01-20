@@ -158,13 +158,13 @@ export default function RadioPage() {
                 <main className="w-full">
                     <div className="">
                         <div className="flex items-center gap-3 mb-5 pb-4 border-b border-gray-50">
-                            <div className="text-gray-500">电台当前共收到 <div className="inline text-bamguet-dark font-bold">{total}</div> 条留言/来信，持续接收中...</div>
+                            <div className="text-gray-500">电台目前共收到 <div className="inline text-bamguet-dark font-bold">{total}</div> 条留言/来信，持续接收中...</div>
                         </div>
 
                         {loadingMessages ? (
                             <div className="text-center text-gray-400 py-20">
-                                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-hwangchoon-dark mx-auto mb-4"></div>
-                                <p className="text-sm">接收电波中...</p>
+                                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-bamguet mx-auto mb-4"></div>
+                                <p className="text-sm">接收电台信号中...</p>
                             </div>
                         ) : messages.length === 0 ? (
                             <div className="text-center text-gray-400 py-20">
