@@ -159,7 +159,7 @@ export default function AddWorkForm({ initialData, isEditMode = false }: AddWork
                             type="text" required
                             value={platform} onChange={e => setPlatform(e.target.value)}
                             className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-sakura focus:ring-2 focus:ring-sakura-light outline-none transition"
-                            placeholder="例如：微博、Lofter、ao3、亚洲网、B站等"
+                            placeholder="例如：微博、LOFTER、ao3、B站等"
                         />
                     </div>
 
