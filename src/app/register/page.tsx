@@ -50,8 +50,8 @@ export default function RegisterPage() {
 
     return (
         <div className="min-h-[80vh] flex items-center justify-center p-4">
-            <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 w-full max-w-md">
-                <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">加入我们</h1>
+            <div className="bg-white p-8 rounded-2xl border border-gray-200 w-full max-w-md">
+                <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">加入小章鱼存档地</h1>
 
                 {error && (
                     <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm">
@@ -121,7 +121,7 @@ export default function RegisterPage() {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full py-2.5 bg-pink-500 text-white rounded-lg font-bold hover:bg-pink-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-4"
+                        className="w-full py-2.5 bg-bamguet-dark text-white rounded-lg font-bold hover:bg-bamguet transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-4"
                     >
                         {loading ? '注册中...' : '注册'}
                     </button>
@@ -129,7 +129,7 @@ export default function RegisterPage() {
 
                 <div className="mt-6 text-center text-sm text-gray-500">
                     已有账号？{' '}
-                    <Link href="/login" className="text-pink-500 hover:underline">
+                    <Link href="/login" className="text-bamguet-dark hover:underline">
                         直接登录
                     </Link>
                 </div>

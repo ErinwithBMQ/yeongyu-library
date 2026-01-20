@@ -31,7 +31,7 @@ export default function LoginPage() {
 
     return (
         <div className="min-h-[80vh] flex items-center justify-center p-4">
-            <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 w-full max-w-md">
+            <div className="bg-white p-8 rounded-2xl border border-gray-200 w-full max-w-md">
                 <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">欢迎回来</h1>
 
                 {error && (
@@ -67,7 +67,7 @@ export default function LoginPage() {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full py-2.5 bg-pink-500 text-white rounded-lg font-bold hover:bg-pink-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+                        className="w-full py-2.5 bg-bamguet-dark text-white rounded-lg font-bold hover:bg-bamguet transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-2"
                     >
                         {loading ? '登录中...' : '登录'}
                     </button>
@@ -75,7 +75,7 @@ export default function LoginPage() {
 
                 <div className="mt-6 text-center text-sm text-gray-500">
                     还没有账号？{' '}
-                    <Link href="/register" className="text-pink-500 hover:underline">
+                    <Link href="/register" className="text-bamguet-dark hover:underline">
                         注册账号
                     </Link>
                 </div>
