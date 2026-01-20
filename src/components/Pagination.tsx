@@ -60,6 +60,7 @@ export default function Pagination({ currentPage, totalCount, pageSize, onPageCh
                     type="text"
                     value={inputPage}
                     onChange={(e) => setInputPage(e.target.value)}
+                    placeholder="页码"
                     className="w-10 sm:w-12 px-1 py-1 text-center border border-gray-200 rounded text-sm focus:outline-none focus:border-bamguet-dark transition-colors"
                 />
                 <button
