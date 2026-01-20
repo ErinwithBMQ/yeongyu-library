@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabaseClient';
+import { toast } from 'sonner';
+import { showConfirm } from '@/lib/confirm';
 
 // 定义数据类型，对应数据库中的表结构
 type Work = {
@@ -52,7 +54,7 @@ export default function LibraryDemo() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!formData.title || !formData.author) {
-            alert('标题和作者是必填项');
+            toast.warning('标题和作者是必填项');
             return;
         }
 
@@ -61,9 +63,9 @@ export default function LibraryDemo() {
             .insert([formData]); // 插入的对象键名必须和数据库列名一致
 
         if (error) {
-            alert('添加失败: ' + error.message);
+            toast.error('添加失败: ' + error.message);
         } else {
-            alert('添加成功！');
+            toast.success('添加成功！');
             setFormData({ title: '', author: '', platform: '', url: '' }); // 清空表单
             fetchWorks(); // 刷新列表
         }
@@ -71,20 +73,22 @@ export default function LibraryDemo() {
 
     // 3. 删除数据 (Delete)
     // 对应的 SQL: DELETE FROM works WHERE id = ?;
-    const handleDelete = async (id: number) => {
-        const confirm = window.confirm('确定要删除这条记录吗？');
-        if (!confirm) return;
+    const handleDelete = (id: number) => {
+        showConfirm('确定要删除这条记录吗？', async () => {
+            const { error } = await supabase
+                .from('works_old')
+                .delete()
+                .eq('id', id);
 
-        const { error } = await supabase
-            .from('works_old')
-            .delete()
-            .eq('id', id);
-
-        if (error) {
-            alert('删除失败: ' + error.message);
-        } else {
-            fetchWorks(); // 刷新列表
-        }
+            if (error) {
+                toast.error('删除失败: ' + error.message);
+            } else {
+                fetchWorks(); // 刷新列表
+            }
+        }, {
+            confirmText: '删除',
+            type: 'danger'
+        });
     };
 
     return (

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { getTagsGroupedByCategory } from '@/services/tags';
 import { createWork } from '@/services/works';
 import { Tag } from '@/types';
+import { toast } from 'sonner';
 
 export default function AddWorkForm() {
     const router = useRouter();
@@ -28,7 +29,7 @@ export default function AddWorkForm() {
                 setGroupedTags(tags);
             } catch (error) {
                 console.error('加载标签失败', error);
-                alert('无法加载标签，请稍后刷新重试');
+                toast.error('无法加载标签，请稍后刷新重试');
             } finally {
                 setLoadingTags(false);
             }
@@ -50,7 +51,7 @@ export default function AddWorkForm() {
         e.preventDefault();
 
         if (!title || !author || !url || !platform) {
-            alert('请填写标星(*)的必填项');
+            toast.warning('请填写标星(*)的必填项');
             return;
         }
 
@@ -64,12 +65,12 @@ export default function AddWorkForm() {
                 summary,
                 tag_ids: selectedTagIds
             });
-            alert('✅ 作品添加成功！');
+            toast.success('作品添加成功！');
             router.push('/library'); // 跳转回图书馆首页
             router.refresh(); // 刷新数据
         } catch (error: any) {
             console.error('提交失败', error);
-            alert('❌ 提交失败: ' + (error.message || '未知错误'));
+            toast.error('提交失败: ' + (error.message || '未知错误'));
         } finally {
             setSubmitting(false);
         }

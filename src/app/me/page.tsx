@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { signOut, updatePassword } from '@/services/auth';
+import { toast } from 'sonner';
+import { showConfirm } from '@/lib/confirm';
 
 export default function MePage() {
     const { user, loading } = useAuth();
@@ -20,17 +22,19 @@ export default function MePage() {
         }
     }, [user, loading, router]);
 
-    const handleLogout = async () => {
-        const confirmLogout = window.confirm('确定要退出登录吗？');
-        if (!confirmLogout) return;
-
-        try {
-            await signOut();
-            router.push('/');
-            router.refresh();
-        } catch (error) {
-            console.error('Logout failed', error);
-        }
+    const handleLogout = () => {
+        showConfirm('确定要退出登录吗？', async () => {
+            try {
+                await signOut();
+                router.push('/');
+                router.refresh();
+            } catch (error) {
+                console.error('Logout failed', error);
+                toast.error('退出失败');
+            }
+        }, {
+            confirmText: '退出'
+        });
     };
 
     const handleUpdatePassword = async (e: React.FormEvent) => {

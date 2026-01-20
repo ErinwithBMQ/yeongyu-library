@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { FavoriteFolder } from '@/types';
 import { getMyFolders, createFolder, addWorkToFolder, removeWorkFromFolder, checkWorkInFolders } from '@/services/favorites';
+import { toast } from 'sonner';
 
 interface AddToFavoriteModalProps {
     workId: number;
@@ -52,7 +53,7 @@ export default function AddToFavoriteModal({ workId, isOpen, onClose }: AddToFav
             // 还是不要自动选比较好，让用户自己决定，或者看需求。这里先不自动选。
         } catch (error) {
             console.error('创建收藏夹失败', error);
-            alert('创建失败');
+            toast.error('创建失败');
         } finally {
             setCreating(false);
         }
@@ -70,7 +71,7 @@ export default function AddToFavoriteModal({ workId, isOpen, onClose }: AddToFav
             }
         } catch (error) {
             console.error('操作失败', error);
-            alert('操作失败');
+            toast.error('操作失败');
         }
     };
 
@@ -102,14 +103,14 @@ export default function AddToFavoriteModal({ workId, isOpen, onClose }: AddToFav
                                         key={folder.id}
                                         onClick={() => toggleFolder(folder.id)}
                                         className={`w-full flex items-center justify-between p-3 rounded-xl border transition-all ${isSelected
-                                            ? 'bg-pink-50 border-pink-200 text-pink-700'
+                                            ? 'bg-bamguet-light border-bamguet text-bamguet-dark'
                                             : 'bg-white border-gray-100 text-gray-600 hover:bg-gray-50'
                                             }`}
                                     >
                                         <div className="flex items-center gap-3">
                                             <span className="text-xl">
-                                                {/* 简单的图标逻辑：有选中的就是实心星，没选中就是文件夹 */}
-                                                {isSelected ? '★' : '📁'}
+                                                {/* 简单的图标逻辑：有选中的就是爱心，没选中就是文件夹 */}
+                                                {isSelected ? '❤️' : '📁'}
                                             </span>
                                             <span className="font-medium">{folder.name}</span>
                                         </div>
@@ -130,13 +131,13 @@ export default function AddToFavoriteModal({ workId, isOpen, onClose }: AddToFav
                             value={newFolderName}
                             onChange={(e) => setNewFolderName(e.target.value)}
                             placeholder="新建收藏夹名称..."
-                            className="flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-300 text-sm"
+                            className="flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-bamguet text-sm"
                             onKeyDown={(e) => e.key === 'Enter' && handleCreateFolder()}
                         />
                         <button
                             onClick={handleCreateFolder}
                             disabled={creating || !newFolderName.trim()}
-                            className="px-4 py-2 bg-pink-400 text-white rounded-lg hover:bg-pink-500 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium transition"
+                            className="px-4 py-2 bg-bamguet text-white rounded-lg hover:bg-bamguet-dark disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium transition"
                         >
                             {creating ? '...' : '新建'}
                         </button>

@@ -7,6 +7,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import AddToFavoriteModal from '@/components/AddToFavoriteModal';
+import { toast } from 'sonner';
+import { showConfirm } from '@/lib/confirm';
 
 export default function WorkDetailPage({ params }: { params: Promise<{ id: string }> }) {
     // Unwrapping params using React.use()
@@ -32,19 +34,23 @@ export default function WorkDetailPage({ params }: { params: Promise<{ id: strin
         fetchWork();
     }, [id]);
 
-    const handleDelete = async () => {
+    const handleDelete = () => {
         if (!work) return;
-        const confirm = window.confirm('确定要删除这个作品吗？此操作不可撤销。');
-        if (!confirm) return;
 
-        try {
-            await deleteWork(work.id);
-            alert('已删除');
-            router.push('/library');
-        } catch (error) {
-            alert('删除失败');
-            console.error(error);
-        }
+        showConfirm('确定要删除这个作品吗？', async () => {
+            try {
+                await deleteWork(work.id);
+                toast.success('已删除');
+                router.push('/library');
+            } catch (error) {
+                toast.error('删除失败');
+                console.error(error);
+            }
+        }, {
+            description: '此操作不可撤销',
+            confirmText: '删除',
+            type: 'danger'
+        });
     };
 
     if (loading) return <div className="p-10 text-center text-gray-500">加载中...</div>;

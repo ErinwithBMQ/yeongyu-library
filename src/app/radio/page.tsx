@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { getRadioMessages, postRadioMessage, toggleReaction, getMessageReactions } from '@/services/radio';
 import { RadioMessage } from '@/types';
 import RadioMessageCard from '@/components/RadioMessageCard';
+import { toast } from 'sonner';
 // import { getWorks } from '@/services/works';
 
 interface MessageWithReactions extends RadioMessage {
@@ -90,12 +91,12 @@ export default function RadioPage() {
 
     const handleSubmit = async () => {
         if (!content.trim()) {
-            alert('请输入留言内容');
+            toast.warning('请输入留言内容');
             return;
         }
 
         if (!nickname.trim()) {
-            alert('请输入昵称');
+            toast.warning('请输入昵称');
             return;
         }
 
@@ -115,10 +116,10 @@ export default function RadioPage() {
             // 重新加载留言列表
             await loadMessages();
 
-            alert('留言发送成功！');
+            toast.success('留言发送成功！');
         } catch (error) {
             console.error('发送留言失败:', error);
-            alert('发送留言失败，请稍后再试');
+            toast.error('发送留言失败，请稍后再试');
         } finally {
             setSubmitting(false);
         }
@@ -135,7 +136,7 @@ export default function RadioPage() {
             ));
         } catch (error) {
             console.error('表情操作失败:', error);
-            alert('操作失败，请稍后再试');
+            toast.error('操作失败，请稍后再试');
         }
     };
 

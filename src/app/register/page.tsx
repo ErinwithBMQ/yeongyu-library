@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { signUpWithInviteCode } from '@/services/auth';
+import { toast } from 'sonner';
 
 export default function RegisterPage() {
     const [email, setEmail] = useState('');
@@ -31,11 +32,11 @@ export default function RegisterPage() {
             const { session } = await signUpWithInviteCode(email, password, inviteCode, username);
 
             if (!session) {
-                alert('注册申请已提交！\n请务必前往您的邮箱查看验证邮件，点击链接确认后即可登录。');
+                toast.success('注册申请已提交！请务必前往您的邮箱查看验证邮件，点击链接确认后即可登录。', { duration: 6000 });
                 router.push('/login');
             } else {
                 // If email confirmation is disabled or auto-confirmed
-                alert('注册成功！');
+                toast.success('注册成功！');
                 router.push('/');
                 router.refresh();
             }

@@ -6,6 +6,8 @@ import { useAuth } from '@/context/AuthContext';
 import { FavoriteFolder, Work } from '@/types';
 import { getMyFolders, createFolder, deleteFolder, getFolderWorks, removeWorkFromFolder } from '@/services/favorites';
 import Link from 'next/link';
+import { toast } from 'sonner';
+import { showConfirm } from '@/lib/confirm';
 
 export default function FavoritesPage() {
     const { user, loading } = useAuth();
@@ -83,41 +85,55 @@ export default function FavoritesPage() {
             setSelectedFolderId(newFolder.id);
         } catch (error) {
             console.error('创建收藏夹失败', error);
-            alert('创建失败，请稍后重试');
+            toast.error('创建失败，请稍后重试');
         }
     };
 
-    const handleDeleteFolder = async (folderId: number, folderName: string) => {
-        if (!confirm(`确定要删除收藏夹 "${folderName}" 吗？此操作不可恢复，且会移除其中的所有收藏记录。`)) {
-            return;
-        }
+    const handleDeleteFolder = (folderId: number, folderName: string) => {
+        showConfirm(`确定要删除收藏夹 "${folderName}" 吗？`, async () => {
+            try {
+                await deleteFolder(folderId);
+                const newFolders = folders.filter(f => f.id !== folderId);
+                setFolders(newFolders);
 
-        try {
-            await deleteFolder(folderId);
-            const newFolders = folders.filter(f => f.id !== folderId);
-            setFolders(newFolders);
-
-            // 如果删除的是当前选中的，切换选中状态
-            if (selectedFolderId === folderId) {
-                setSelectedFolderId(newFolders.length > 0 ? newFolders[0].id : null);
+                // 如果删除的是当前选中的，切换选中状态
+                if (selectedFolderId === folderId) {
+                    setSelectedFolderId(newFolders.length > 0 ? newFolders[0].id : null);
+                }
+                toast.success('收藏夹已删除');
+            } catch (error) {
+                console.error('删除收藏夹失败', error);
+                toast.error('删除失败');
             }
-        } catch (error) {
-            console.error('删除收藏夹失败', error);
-            alert('删除失败');
-        }
+        }, {
+            description: '此操作不可恢复，且会移除其中的所有收藏记录。',
+            confirmText: '删除',
+            type: 'danger'
+        });
     };
 
-    const handleRemoveWork = async (workId: number, workTitle: string) => {
+    const handleRemoveWork = (workId: number, workTitle: string) => {
         if (!selectedFolderId) return;
-        if (!confirm(`确定要将 "${workTitle}" 从此收藏夹移除吗？`)) return;
 
-        try {
-            await removeWorkFromFolder(selectedFolderId, workId);
-            setWorks(works.filter(w => w.id !== workId));
-        } catch (error) {
-            console.error('移出失败', error);
-            alert('操作失败');
-        }
+        toast(`确定要将 "${workTitle}" 从此收藏夹移除吗？`, {
+            action: {
+                label: '移除',
+                onClick: async () => {
+                    try {
+                        await removeWorkFromFolder(selectedFolderId, workId);
+                        setWorks(works.filter(w => w.id !== workId));
+                        toast.success('已移除');
+                    } catch (error) {
+                        console.error('移出失败', error);
+                        toast.error('操作失败');
+                    }
+                }
+            },
+            cancel: {
+                label: '取消',
+                onClick: () => { }
+            }
+        });
     };
 
     const selectedFolder = folders.find(f => f.id === selectedFolderId);
@@ -184,8 +200,8 @@ export default function FavoritesPage() {
                                     key={folder.id}
                                     onClick={() => setSelectedFolderId(folder.id)}
                                     className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all text-left group ${selectedFolderId === folder.id
-                                            ? 'bg-bamguet-dark text-white'
-                                            : 'bg-white hover:bg-bamguet-light text-gray-700'
+                                        ? 'bg-bamguet-dark text-white'
+                                        : 'bg-white hover:bg-bamguet-light text-gray-700'
                                         }`}
                                 >
                                     <div className="flex items-center gap-3 truncate">
