@@ -99,8 +99,17 @@ export const signIn = async (email: string, password: string) => {
  * 用户登出
  */
 export const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) throw error;
+    try {
+        const { error } = await supabase.auth.signOut();
+        if (error) throw error;
+    } catch (error: any) {
+        // 如果错误是因为 Session 丢失，则视为退出成功，忽略报错
+        if (error.message?.includes('session missing') || error.name === 'AuthSessionMissingError') {
+            console.warn('Supabase signOut: Session already missing, treating as success');
+            return;
+        }
+        throw error;
+    }
 };
 
 /**
