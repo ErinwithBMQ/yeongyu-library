@@ -258,7 +258,7 @@ export default function FavoritesPage() {
                                                 <span className="px-2 py-1 bg-white text-xs font-semibold text-gray-500 rounded border border-gray-100">
                                                     {work.platform}
                                                 </span>
-                                                <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <div className="flex gap-2 transition-opacity">
                                                     <button
                                                         onClick={() => handleRemoveWork(work.id, work.title)}
                                                         className="text-gray-400 hover:text-red-400 p-1"
