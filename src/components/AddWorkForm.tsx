@@ -118,6 +118,9 @@ export default function AddWorkForm({ initialData, isEditMode = false }: AddWork
         ...existingCategories.filter(c => !categoryOrder.includes(c))
     ];
 
+    // 平台选项
+    const PLATFORM_OPTIONS = ['微博', 'LOFTER', 'ao3', '亚洲网', 'B站', '小红书', '其他平台'];
+
     if (loadingTags) {
         return <div className="p-8 text-center text-gray-500">正在加载标签库...</div>;
     }
@@ -154,13 +157,24 @@ export default function AddWorkForm({ initialData, isEditMode = false }: AddWork
                     </div>
 
                     <div className="space-y-2">
-                        <label className="block text-sm font-medium text-gray-700">发布平台 <span className="text-red-500">*</span></label>
-                        <input
-                            type="text" required
-                            value={platform} onChange={e => setPlatform(e.target.value)}
-                            className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-sakura focus:ring-2 focus:ring-sakura-light outline-none transition"
-                            placeholder="例如：微博、LOFTER、ao3、B站等"
-                        />
+                        <label htmlFor="platform-select" className="block text-sm font-medium text-gray-700">发布平台 <span className="text-red-500">*</span></label>
+                        <div className="relative">
+                            <select
+                                id="platform-select"
+                                required
+                                value={platform}
+                                onChange={e => setPlatform(e.target.value)}
+                                className="w-full px-4 py-2 rounded-lg border border-gray-200 text-gray-700 focus:border-sakura focus:ring-2 focus:ring-sakura-light outline-none transition appearance-none bg-white"
+                            >
+                                <option value="" disabled>请选择平台</option>
+                                {PLATFORM_OPTIONS.map(opt => (
+                                    <option key={opt} value={opt}>{opt}</option>
+                                ))}
+                            </select>
+                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
+                                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </div>
+                        </div>
                     </div>
 
                     <div className="space-y-2">
