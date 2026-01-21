@@ -25,7 +25,8 @@ export default function LibraryView() {
 
     const pageSize = 9; // 一页显示几个
 
-    const categoryOrder = ['类型', '世界观', '篇幅', '进度', '情感', '剧情', '预警', '人设', '幻想', '特殊设定'];
+    // 与 AddWorkForm.tsx 保持一致的顺序
+    const categoryOrder = ['类型', '世界观', '篇幅', '进度', '预警', '情感', '背景', '剧情', '人设', '特殊设定', '幻想设定'];
 
     // Load Tags on mount
     useEffect(() => {

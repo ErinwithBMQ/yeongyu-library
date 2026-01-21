@@ -8,10 +8,10 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[80vh] text-center p-4">
-      <div className="mb-6">
+      <div className="mb-8">
         <img src="/jjukkyumi_logo.png" alt="小章鱼存档地" className="h-24 md:h-32 w-auto object-contain" />
       </div>
-      <p className="text-xl text-gray-600 mb-12 max-w-2xl">
+      <p className="text text-gray-600 mb-12 max-w-2xl">
         欢迎来到专属于小章鱼们的产出存档地~大家一起开心吃饭吧！
         <br />
         Only For Yeonjun and Beomgyu.

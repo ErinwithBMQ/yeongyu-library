@@ -109,7 +109,7 @@ export default function AddWorkForm({ initialData, isEditMode = false }: AddWork
     };
 
     // 定义分类的显示顺序（可选，为了更好看）
-    const categoryOrder = ['类型', '世界观', '篇幅', '进度', '情感', '剧情', '预警', '人设', '特殊设定', '幻想设定'];
+    const categoryOrder = ['类型', '世界观', '篇幅', '进度', '预警', '情感', '背景', '剧情', '人设', '特殊设定', '幻想设定'];
     // 获取所有实际存在的分类key
     const existingCategories = Object.keys(groupedTags);
     // 合并排序：优先显示定义的顺序，剩下的按原样放后面

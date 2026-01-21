@@ -120,26 +120,35 @@ export default function RadioMessageCard({ message, onReact }: RadioMessageCardP
                 <div className="relative">
                     <button
                         onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                        className="px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-full text-sm transition"
+                        className={`px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-full text-sm transition relative z-20 ${showEmojiPicker ? 'bg-gray-200 ring-2 ring-sakura/30' : ''}`}
                         title="添加表情"
                     >
                         +
                     </button>
                     {showEmojiPicker && (
-                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-white border border-gray-200 rounded-lg shadow-lg p-2 flex gap-1 z-10 w-max">
-                            {EMOJI_OPTIONS.map((emoji) => (
-                                <button
-                                    key={emoji}
-                                    onClick={() => {
-                                        onReact(message.id, emoji);
-                                        setShowEmojiPicker(false);
-                                    }}
-                                    className="hover:bg-gray-100 rounded px-2 py-1 text-lg"
-                                >
-                                    {emoji}
-                                </button>
-                            ))}
-                        </div>
+                        <>
+                            {/* 遮罩层：点击空白处关闭 */}
+                            <div className="fixed inset-0 z-10" onClick={() => setShowEmojiPicker(false)} />
+                            {/* 表情选择面板：移动端屏幕居中，PC端按钮上方悬浮 */}
+                            <div className="
+                                fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
+                                md:absolute md:top-auto md:bottom-full md:left-1/2 md:-translate-x-1/2 md:translate-y-0 md:mb-2 
+                                bg-white border border-gray-200 rounded-lg shadow-xl p-2 flex gap-1 z-20 w-max
+                            ">
+                                {EMOJI_OPTIONS.map((emoji) => (
+                                    <button
+                                        key={emoji}
+                                        onClick={() => {
+                                            onReact(message.id, emoji);
+                                            setShowEmojiPicker(false);
+                                        }}
+                                        className="hover:bg-gray-100 rounded px-2 py-1 text-lg active:scale-125 transition-transform"
+                                    >
+                                        {emoji}
+                                    </button>
+                                ))}
+                            </div>
+                        </>
                     )}
                 </div>
             </div>
