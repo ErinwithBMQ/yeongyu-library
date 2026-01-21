@@ -2,6 +2,7 @@
 
 import { useState, useEffect, use } from 'react';
 import { getWorkById, deleteWork } from '@/services/works';
+import { checkWorkInFolders } from '@/services/favorites';
 import { WorkWithTags } from '@/types';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -18,6 +19,7 @@ export default function WorkDetailPage({ params }: { params: Promise<{ id: strin
     const [work, setWork] = useState<WorkWithTags | null>(null);
     const [loading, setLoading] = useState(true);
     const [isFavoriteModalOpen, setIsFavoriteModalOpen] = useState(false);
+    const [isFavorited, setIsFavorited] = useState(false);
 
     useEffect(() => {
         const fetchWork = async () => {
@@ -25,6 +27,13 @@ export default function WorkDetailPage({ params }: { params: Promise<{ id: strin
             try {
                 const data = await getWorkById(parseInt(id));
                 setWork(data);
+
+                // 检查收藏状态
+                if (user && data) {
+                    checkWorkInFolders(data.id).then(ids => {
+                        setIsFavorited(ids.length > 0);
+                    });
+                }
             } catch (error) {
                 console.error('Failed to fetch work details', error);
             } finally {
@@ -32,7 +41,7 @@ export default function WorkDetailPage({ params }: { params: Promise<{ id: strin
             }
         };
         fetchWork();
-    }, [id]);
+    }, [id, user]);
 
     const handleDelete = () => {
         if (!work) return;
@@ -123,10 +132,13 @@ export default function WorkDetailPage({ params }: { params: Promise<{ id: strin
                                     </Link>
                                     <button
                                         onClick={() => setIsFavoriteModalOpen(true)}
-                                        className="w-full flex items-center justify-center px-6 py-3 border border-bamguet-dark text-bamguet-dark font-bold rounded-lg hover:bg-bamguet-light transition-all active:scale-95"
+                                        className={`w-full flex items-center justify-center px-6 py-3 border font-bold rounded-lg transition-all active:scale-95 ${isFavorited
+                                            ? 'bg-bamguet-dark text-white border-bamguet-dark hover:brightness-110'
+                                            : 'border-bamguet-dark text-bamguet-dark hover:bg-bamguet-light'
+                                            }`}
                                     >
-                                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
-                                        加入收藏
+                                        <svg className="w-5 h-5 mr-2" fill={isFavorited ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+                                        {isFavorited ? '已收藏' : '加入收藏'}
                                     </button>
                                 </div>
                             </>
@@ -160,6 +172,7 @@ export default function WorkDetailPage({ params }: { params: Promise<{ id: strin
                     workId={work.id}
                     isOpen={isFavoriteModalOpen}
                     onClose={() => setIsFavoriteModalOpen(false)}
+                    onUpdate={(fav) => setIsFavorited(fav)}
                 />
             )}
         </div>

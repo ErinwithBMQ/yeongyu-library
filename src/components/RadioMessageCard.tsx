@@ -24,14 +24,14 @@ const EMOJI_OPTIONS = ['❤️', '😭', '😂', '👍', '🎉', '💕'];
 
 export default function RadioMessageCard({ message, onReact }: RadioMessageCardProps) {
     const [expanded, setExpanded] = useState(false);
-    const isShort = message.content.length <= 150;
+    const isShort = message.content.length <= 80;
     const messageType = isShort ? '留言' : '来信';
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
-    // 信封模式下截取前150字
+    // 信封模式下截取前80字
     const getPreview = () => {
         if (isShort) return message.content;
-        return message.content.slice(0, 150);
+        return message.content.slice(0, 80);
     };
 
     return (
@@ -126,7 +126,7 @@ export default function RadioMessageCard({ message, onReact }: RadioMessageCardP
                         +
                     </button>
                     {showEmojiPicker && (
-                        <div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 bg-white border border-gray-200 rounded-lg shadow-lg p-2 flex gap-1 z-10 w-max">
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-white border border-gray-200 rounded-lg shadow-lg p-2 flex gap-1 z-10 w-max">
                             {EMOJI_OPTIONS.map((emoji) => (
                                 <button
                                     key={emoji}

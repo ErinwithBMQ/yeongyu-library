@@ -9,9 +9,10 @@ interface AddToFavoriteModalProps {
     workId: number;
     isOpen: boolean;
     onClose: () => void;
+    onUpdate?: (isFavorited: boolean) => void;
 }
 
-export default function AddToFavoriteModal({ workId, isOpen, onClose }: AddToFavoriteModalProps) {
+export default function AddToFavoriteModal({ workId, isOpen, onClose, onUpdate }: AddToFavoriteModalProps) {
     const [folders, setFolders] = useState<FavoriteFolder[]>([]);
     const [selectedFolderIds, setSelectedFolderIds] = useState<number[]>([]);
     const [newFolderName, setNewFolderName] = useState('');
@@ -59,15 +60,21 @@ export default function AddToFavoriteModal({ workId, isOpen, onClose }: AddToFav
         }
     };
 
-    const toggleFolder = async (folderId: number) => {
+    const toggleFolder = async (folderId: number, folderName: string) => {
         try {
             const isSelected = selectedFolderIds.includes(folderId);
             if (isSelected) {
                 await removeWorkFromFolder(folderId, workId);
-                setSelectedFolderIds(prev => prev.filter(id => id !== folderId));
+                const newIds = selectedFolderIds.filter(id => id !== folderId);
+                setSelectedFolderIds(newIds);
+                toast.success('已取消收藏');
+                onUpdate?.(newIds.length > 0);
             } else {
                 await addWorkToFolder(folderId, workId);
-                setSelectedFolderIds(prev => [...prev, folderId]);
+                const newIds = [...selectedFolderIds, folderId];
+                setSelectedFolderIds(newIds);
+                toast.success(`已收藏到 "${folderName}"`);
+                onUpdate?.(newIds.length > 0);
             }
         } catch (error) {
             console.error('操作失败', error);
@@ -101,7 +108,7 @@ export default function AddToFavoriteModal({ workId, isOpen, onClose }: AddToFav
                                 return (
                                     <button
                                         key={folder.id}
-                                        onClick={() => toggleFolder(folder.id)}
+                                        onClick={() => toggleFolder(folder.id, folder.name)}
                                         className={`w-full flex items-center justify-between p-3 rounded-xl border transition-all ${isSelected
                                             ? 'bg-bamguet-light border-bamguet text-bamguet-dark'
                                             : 'bg-white border-gray-100 text-gray-600 hover:bg-gray-50'

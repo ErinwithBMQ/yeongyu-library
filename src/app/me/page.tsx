@@ -75,8 +75,8 @@ export default function MePage() {
             <div className="space-y-6">
                 {/* User Info Card */}
                 <div className="bg-white rounded-2xl p-6 border border-gray-200 flex items-center gap-4">
-                    <div className="w-16 h-16 bg-bamguet-light rounded-full flex items-center justify-center text-3xl">
-                        🐙
+                    <div className="w-16 h-16 bg-bamguet-light rounded-full flex items-center justify-center p-2">
+                        <img src="/octopus.png" alt="头像" className="w-full h-full object-contain" />
                     </div>
                     <div>
                         <h2 className="text-xl font-bold text-gray-800">

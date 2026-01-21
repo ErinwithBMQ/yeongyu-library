@@ -39,7 +39,7 @@ export default function RadioPage() {
     // Filter & Pagination & UI States
     const [page, setPage] = useState(1);
     const [total, setTotal] = useState(0);
-    const pageSize = 8;
+    const pageSize = 9;
 
     useEffect(() => {
         if (!loading && !user) {
