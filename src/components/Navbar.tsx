@@ -63,7 +63,7 @@ export default function Navbar() {
                     <span className="text-gray-300 text-sm">...</span>
                 ) : user ? (
                     <>
-                        <Link href="/radio" className="group flex flex-col items-center gap-0.5 text-xs font-medium text-gray-600 hover:text-hwangchoon-dark transition-colors">
+                        <Link href="/radio" className="group flex flex-col items-center gap-0.5 text-xs font-medium text-gray-600 hover:text-bamguet-dark transition-colors">
                             <Radio className="w-5 h-5 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
                             <span>电台</span>
                         </Link>
@@ -71,7 +71,7 @@ export default function Navbar() {
                             <Heart className="w-5 h-5 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
                             <span>收藏夹</span>
                         </Link>
-                        <Link href="/me" className="group flex flex-col items-center gap-0.5 text-xs font-medium text-gray-600 hover:text-hwangchoon-dark transition-colors">
+                        <Link href="/me" className="group flex flex-col items-center gap-0.5 text-xs font-medium text-gray-600 hover:text-bamguet-dark transition-colors">
                             <User className="w-5 h-5 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
                             <span>我</span>
                         </Link>

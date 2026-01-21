@@ -232,7 +232,7 @@ export default function RadioPage() {
                                     value={content}
                                     onChange={(e) => setContent(e.target.value)}
                                     className="w-full h-32 md:h-40 rounded-md border-gray-200 p-3 focus:ring-2 focus:ring-gray-400 focus:border-transparent resize-none text-sm bg-gray-50 leading-relaxed"
-                                    placeholder="写下你想说的话..."
+                                    placeholder="写下你想说的话...（小于80字显示为留言，超过80字显示为来信）"
                                 ></textarea>
                             </div>
 
@@ -251,7 +251,7 @@ export default function RadioPage() {
                                         <span>投递中...</span>
                                     </>
                                 ) : (
-                                    <span>投递留言</span>
+                                    <span>点击投递</span>
                                 )}
                             </button>
                         </div>
