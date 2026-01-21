@@ -32,7 +32,7 @@ export default function Home() {
           ) : (
             <div className="flex gap-4">
               <Link href="/login"
-                className="px-8 py-4 bg-bamguet-dark text-white border-2 border-bamguet-dark rounded-2xl hover:bg-bamguet hover:-translate-y-1 transition-all font-bold text-lg">
+                className="px-8 py-4 bg-bamguet-dark text-white border-2 border-bamguet-dark rounded-2xl hover:brightness-110 hover:-translate-y-1 transition-all font-bold text-lg">
                 登录
               </Link>
               <Link href="/register"

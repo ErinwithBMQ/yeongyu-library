@@ -192,13 +192,13 @@ export default function LibraryView({ sortOrder = 'newest' }: LibraryViewProps) 
                     <button
                         onClick={handleRandomWork}
                         className={`
-                            flex items-center justify-center transition-all bg-bamguet-light/10 hover:bg-bamguet-light/20 text-bamguet-dark
+                            flex items-center justify-center transition-all bg-bamguet-light/50 hover:bg-bamguet-light/20 text-bamguet-dark
                             ${isSidebarOpen
                                 ? "mt-4 w-full py-2.5 rounded-lg font-bold gap-2"
-                                : "p-2 rounded-lg aspect-square"
+                                : "p-2 rounded-lg aspect-square bg-white hover:bg-bamguet-light/20"
                             }
                         `}
-                        title="随机来一篇"
+                        title="当前筛选条件下随机抽取一篇"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l14.2-17" /><path d="M22 22 7.8 5.4" /><path d="M2 6h1.4c1.3 0 2.5.6 3.3 1.7l3 3.6" /><path d="M22 2v4" /><path d="M18 2h4" /><path d="M22 18h-4" /><path d="M22 22v-4" /></svg>
                         {isSidebarOpen && <span>随机来一篇</span>}
