@@ -6,6 +6,7 @@ import { getWorkById } from '@/services/works';
 import { WorkWithTags } from '@/types';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function EditWorkPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
@@ -39,6 +40,11 @@ export default function EditWorkPage({ params }: { params: Promise<{ id: string 
     return (
         <div className="container mx-auto p-4 sm:p-8">
             <header className="mb-8 max-w-4xl mx-auto">
+                <div className="mb-6">
+                    <Link href={`/library/${id}`} className="text-gray-400 hover:text-bamguet transition inline-flex items-center gap-1 text-sm">
+                        &larr; 返回作品
+                    </Link>
+                </div>
                 <h1 className="text-3xl font-bold text-bamguet-dark mb-2">编辑作品</h1>
                 <p className="text-gray-600">编辑作品信息，注意标题和作者不可修改。</p>
             </header>

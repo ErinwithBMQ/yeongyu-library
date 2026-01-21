@@ -1,13 +1,19 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getWorks } from '@/services/works';
+import { useRouter } from 'next/navigation';
+import { getWorks, getRandomWorkId } from '@/services/works';
 import { getTagsGroupedByCategory } from '@/services/tags';
 import { WorkWithTags, Tag } from '@/types';
 import Link from 'next/link';
 import Pagination from './Pagination';
 
-export default function LibraryView() {
+interface LibraryViewProps {
+    sortOrder?: 'newest' | 'oldest';
+}
+
+export default function LibraryView({ sortOrder = 'newest' }: LibraryViewProps) {
+    const router = useRouter();
     const [works, setWorks] = useState<WorkWithTags[]>([]);
     const [loading, setLoading] = useState(true);
     const [groupedTags, setGroupedTags] = useState<Record<string, Tag[]>>({});
@@ -37,7 +43,7 @@ export default function LibraryView() {
     useEffect(() => {
         fetchWorks();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedTagIds, page, appliedQuery]);
+    }, [selectedTagIds, page, appliedQuery, sortOrder]);
 
     const fetchWorks = async () => {
         setLoading(true);
@@ -46,7 +52,8 @@ export default function LibraryView() {
                 page,
                 pageSize,
                 filterTagIds: selectedTagIds,
-                searchQuery: appliedQuery
+                searchQuery: appliedQuery,
+                sort: sortOrder
             });
             setWorks(data);
             setTotal(total);
@@ -54,6 +61,25 @@ export default function LibraryView() {
             console.error('Failed to fetch works', error);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleRandomWork = async () => {
+        // Show a simple loading approach or just navigate
+        // Ideally we might want a separate loading state or reuse global loading but reusing global loading might flash the list.
+        // Let's just do it.
+        try {
+            const id = await getRandomWorkId({
+                searchQuery: appliedQuery,
+                filterTagIds: selectedTagIds
+            });
+            if (id) {
+                router.push(`/library/${id}`);
+            } else {
+                alert('当前筛选条件下没有找到作品');
+            }
+        } catch (error) {
+            console.error('Failed to get random work', error);
         }
     };
 
@@ -101,9 +127,14 @@ export default function LibraryView() {
     return (
         <div className="flex flex-col lg:flex-row gap-8">
             {/* Left Sidebar: Filters */}
-            <aside className={`flex-shrink-0 transition-all duration-300 ${isSidebarOpen ? 'lg:w-64' : 'lg:w-12'}`}>
-                <div className={`bg-white rounded-xl border border-gray-200 overflow-hidden ${isSidebarOpen ? 'p-4' : 'p-2'}`}>
-                    <div className={`flex items-center ${isSidebarOpen ? 'justify-between mb-4' : 'justify-center flex-col gap-4'}`}>
+            <aside className={`flex-shrink-0 transition-all duration-300 ${isSidebarOpen ? 'lg:w-64 w-full' : 'lg:w-12 w-fit'} lg:block`}>
+                <div className={`bg-white rounded-xl border border-gray-200 overflow-hidden 
+                    ${isSidebarOpen
+                        ? 'p-4'
+                        : 'p-2 flex flex-row items-center gap-2 lg:flex-col lg:justify-center lg:gap-4'
+                    }
+                `}>
+                    <div className={`flex items-center ${isSidebarOpen ? 'justify-between mb-4' : 'justify-center'}`}>
                         {isSidebarOpen && <h2 className="font-bold text-gray-700">标签筛选</h2>}
 
                         <button
@@ -157,6 +188,21 @@ export default function LibraryView() {
                             ))}
                         </div>
                     )}
+
+                    <button
+                        onClick={handleRandomWork}
+                        className={`
+                            flex items-center justify-center transition-all bg-bamguet-light/10 hover:bg-bamguet-light/20 text-bamguet-dark
+                            ${isSidebarOpen
+                                ? "mt-4 w-full py-2.5 rounded-lg font-bold gap-2"
+                                : "p-2 rounded-lg aspect-square"
+                            }
+                        `}
+                        title="随机来一篇"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l14.2-17" /><path d="M22 22 7.8 5.4" /><path d="M2 6h1.4c1.3 0 2.5.6 3.3 1.7l3 3.6" /><path d="M22 2v4" /><path d="M18 2h4" /><path d="M22 18h-4" /><path d="M22 22v-4" /></svg>
+                        {isSidebarOpen && <span>随机来一篇</span>}
+                    </button>
                 </div>
             </aside>
 

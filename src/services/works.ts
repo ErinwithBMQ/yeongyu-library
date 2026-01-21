@@ -126,6 +126,63 @@ export const getWorks = async ({
 };
 
 /**
+ * 根据筛选条件随机获取一个作品ID
+ */
+export const getRandomWorkId = async ({
+    searchQuery,
+    filterTagIds = []
+}: Pick<GetWorksParams, 'searchQuery' | 'filterTagIds'> = {}): Promise<number | null> => {
+    let query = supabase.from('works').select('id');
+
+    // Reuse filter logic
+    if (filterTagIds && filterTagIds.length > 0) {
+        const { data: tagMatches, error: tagError } = await supabase
+            .from('work_tags')
+            .select('work_id, tag_id')
+            .in('tag_id', filterTagIds);
+
+        if (tagError) {
+            console.error('Error fetching tag matches:', tagError);
+            throw tagError;
+        }
+
+        if (!tagMatches || tagMatches.length === 0) {
+            return null;
+        }
+
+        const workIdCounts: Record<number, number> = {};
+        tagMatches.forEach(item => {
+            workIdCounts[item.work_id] = (workIdCounts[item.work_id] || 0) + 1;
+        });
+
+        const validWorkIds = Object.keys(workIdCounts)
+            .map(id => parseInt(id))
+            .filter(id => workIdCounts[id] === filterTagIds.length);
+
+        if (validWorkIds.length === 0) {
+            return null;
+        }
+        query = query.in('id', validWorkIds);
+    }
+
+    if (searchQuery) {
+        query = query.or(`title.ilike.%${searchQuery}%,author_name.ilike.%${searchQuery}%`);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+        console.error('Error fetching random work candidates:', error);
+        return null;
+    }
+
+    if (!data || data.length === 0) return null;
+
+    const randomIndex = Math.floor(Math.random() * data.length);
+    return data[randomIndex].id;
+};
+
+/**
  * 获取单个作品详情
  */
 export const getWorkById = async (id: number): Promise<WorkWithTags | null> => {
