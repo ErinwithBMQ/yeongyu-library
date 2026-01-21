@@ -122,7 +122,7 @@ export default function AddToFavoriteModal({ workId, isOpen, onClose, onUpdate }
                                             <span className="font-medium">{folder.name}</span>
                                         </div>
                                         {isSelected && (
-                                            <svg className="w-5 h-5 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                                            <svg className="w-5 h-5 text-bamguet-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
                                         )}
                                     </button>
                                 );
