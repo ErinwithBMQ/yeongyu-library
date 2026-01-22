@@ -65,7 +65,13 @@ export const getFolderWorks = async (folderId: number) => {
                 original_url,
                 platform,
                 summary,
-                created_at
+                created_at,
+                work_tags (
+                    tag:tags (
+                        name,
+                        category
+                    )
+                )
             )
         `)
         .eq('folder_id', folderId)
@@ -76,8 +82,9 @@ export const getFolderWorks = async (folderId: number) => {
     // 格式化返回数据，将 work 属性展平
     return data.map((item: any) => ({
         ...item.work,
+        tags: item.work.work_tags?.map((wt: any) => wt.tag) || [],
         added_at: item.created_at
-    })) as (Work & { added_at: string })[];
+    })) as (Work & { added_at: string, tags: any[] })[];
 };
 
 /**

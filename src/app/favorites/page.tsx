@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { FavoriteFolder, Work } from '@/types';
+import { FavoriteFolder, Work, Tag } from '@/types';
 import { getMyFolders, createFolder, deleteFolder, getFolderWorks, removeWorkFromFolder } from '@/services/favorites';
 import Link from 'next/link';
 import { toast } from 'sonner';
@@ -15,7 +15,7 @@ export default function FavoritesPage() {
 
     const [folders, setFolders] = useState<FavoriteFolder[]>([]);
     const [selectedFolderId, setSelectedFolderId] = useState<number | null>(null);
-    const [works, setWorks] = useState<(Work & { added_at: string })[]>([]);
+    const [works, setWorks] = useState<(Work & { added_at: string, tags?: Tag[] })[]>([]);
 
     const [loadingFolders, setLoadingFolders] = useState(true);
     const [loadingWorks, setLoadingWorks] = useState(false);
@@ -32,10 +32,10 @@ export default function FavoritesPage() {
 
     // 加载收藏夹列表
     useEffect(() => {
-        if (user) {
+        if (user?.id) {
             loadFolders();
         }
-    }, [user]);
+    }, [user?.id]);
 
     // 当选中文件夹改变时，加载该文件夹的作品
     useEffect(() => {
@@ -251,35 +251,44 @@ export default function FavoritesPage() {
                                     </Link>
                                 </div>
                             ) : (
-                                <div className="grid md:grid-cols-2 gap-4">
-                                    {works.map((work) => (
-                                        <div key={work.id} className="group relative bg-gray-50 hover:bg-white border border-gray-100 hover:border-bamguet rounded-xl p-4 transition-all">
-                                            <div className="flex justify-between items-start mb-2">
-                                                <span className="px-2 py-1 bg-white text-xs font-semibold text-gray-500 rounded border border-gray-100">
-                                                    {work.platform}
-                                                </span>
-                                                <div className="flex gap-2 transition-opacity">
+                                <div className="flex flex-col gap-2">
+                                    {works.map((work) => {
+                                        const typeTag = work.tags?.find(t => t.category === '类型');
+                                        return (
+                                            <div key={work.id} className="group flex items-center justify-between p-3 rounded-lg border border-gray-200 bg-white hover:border-bamguet/50 transition-all">
+                                                <Link href={`/library/${work.id}`} className="flex-1 min-w-0 flex items-center gap-2 sm:gap-3">
+                                                    <span className="font-bold text-gray-700 truncate group-hover:text-bamguet-dark max-w-[8rem] sm:max-w-none">{work.title}</span>
+                                                    <span className="px-2 py-0.5 rounded text-xs bg-gray-100 text-gray-500 font-medium whitespace-nowrap shrink-0">
+                                                        {typeTag ? typeTag.name : work.platform}
+                                                    </span>
+                                                    <span className="text-sm text-gray-400 truncate border-l border-gray-200 pl-2 sm:pl-3 min-w-0">{work.author_name}</span>
+                                                </Link>
+
+                                                <div className="ml-2 flex items-center gap-1">
+                                                    <a
+                                                        href={work.original_url}
+                                                        target="_blank"
+                                                        onClick={(e) => e.stopPropagation()}
+                                                        className="p-1.5 text-gray-400 hover:text-bamguet-dark hover:bg-bamguet-light/20 rounded-full transition-all"
+                                                        title="直达原址"
+                                                    >
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 3h6v6" /><path d="M10 14 21 3" /><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></svg>
+                                                    </a>
                                                     <button
-                                                        onClick={() => handleRemoveWork(work.id, work.title)}
-                                                        className="text-gray-400 hover:text-red-400 p-1"
-                                                        title="移除收藏"
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            e.stopPropagation();
+                                                            handleRemoveWork(work.id, work.title);
+                                                        }}
+                                                        className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-all"
+                                                        title="移除"
                                                     >
                                                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                                                     </button>
                                                 </div>
                                             </div>
-
-                                            <Link href={`/library/${work.id}`} className="block group-hover:text-pink-600 transition-colors">
-                                                <h3 className="text-lg font-bold text-gray-800 mb-1 truncate">{work.title}</h3>
-                                            </Link>
-
-                                            <p className="text-sm text-gray-600 mb-3">by {work.author_name}</p>
-
-                                            <div className="text-xs text-gray-400 flex justify-between items-end">
-                                                <span>收藏于 {new Date(work.added_at).toLocaleDateString()}</span>
-                                            </div>
-                                        </div>
-                                    ))}
+                                        );
+                                    })}
                                 </div>
                             )}
                         </div>
