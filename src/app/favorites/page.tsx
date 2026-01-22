@@ -219,7 +219,7 @@ export default function FavoritesPage() {
                     {!selectedFolderId ? (
                         <div className="h-full flex flex-col items-center justify-center text-gray-300 border-2 border-dashed border-gray-100 rounded-3xl">
                             <svg className="w-16 h-16 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z" /></svg>
-                            <p>选择左侧文件夹查看收藏</p>
+                            <p>选择文件夹查看收藏</p>
                         </div>
                     ) : (
                         <div className="bg-white rounded-2xl border border-gray-200 p-6 min-h-full">
@@ -257,11 +257,11 @@ export default function FavoritesPage() {
                                         return (
                                             <div key={work.id} className="group flex items-center justify-between p-3 rounded-lg border border-gray-200 bg-white hover:border-bamguet/50 transition-all">
                                                 <Link href={`/library/${work.id}`} className="flex-1 min-w-0 flex items-center gap-2 sm:gap-3">
-                                                    <span className="font-bold text-gray-700 truncate group-hover:text-bamguet-dark max-w-[8rem] sm:max-w-none">{work.title}</span>
+                                                    <span className="font-bold text-gray-700 truncate group-hover:text-bamguet-dark max-w-[5rem] sm:max-w-none">{work.title}</span>
                                                     <span className="px-2 py-0.5 rounded text-xs bg-gray-100 text-gray-500 font-medium whitespace-nowrap shrink-0">
                                                         {typeTag ? typeTag.name : work.platform}
                                                     </span>
-                                                    <span className="text-sm text-gray-400 truncate border-l border-gray-200 pl-2 sm:pl-3 min-w-0">{work.author_name}</span>
+                                                    <span className="text-sm text-gray-400 truncate border-l border-gray-200 pl-2 sm:pl-3 max-w-[4rem] sm:max-w-none">{work.author_name}</span>
                                                 </Link>
 
                                                 <div className="ml-2 flex items-center gap-1">
