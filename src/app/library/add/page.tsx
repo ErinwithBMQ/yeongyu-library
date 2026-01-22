@@ -33,7 +33,6 @@ export default function AddWorkPage() {
                     </Link>
                 </div>
                 <h1 className="text-3xl font-bold text-bamguet-dark mb-2">添加新作品</h1>
-                <p className="text-gray-600">请小章鱼们注意，提交后可修改，不可删除哦</p>
             </header>
 
             <AddWorkForm />

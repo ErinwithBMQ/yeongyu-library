@@ -47,10 +47,10 @@ export default function Navbar() {
     };
 
     return (
-        <nav className={`flex items-center justify-between px-4 py-3 shadow bg-bamguet-light/80 backdrop-blur-sm sticky top-0 z-50 border-b border-bamguet-light transition-transform duration-300 ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}>
+        <nav className={`flex items-center justify-between px-4 py-2 shadow bg-bamguet-light/80 backdrop-blur-sm sticky top-0 z-50 border-b border-bamguet-light transition-transform duration-300 ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}>
             <div className="text-xl font-bold text-bamguet-dark">
                 <Link href="/" className="flex items-center">
-                    <img src="/jjukkyumi_logo.png" alt="小章鱼存档地" className="h-9 w-auto object-contain" />
+                    <img src="/logo_2.png" alt="小章鱼存档地" className="h-10 w-auto object-contain" />
                 </Link>
             </div>
             <div className="flex gap-6 items-center">
