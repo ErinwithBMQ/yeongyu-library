@@ -261,7 +261,7 @@ export default function FavoritesPage() {
                                                     <span className="px-2 py-0.5 rounded text-xs bg-gray-100 text-gray-500 font-medium whitespace-nowrap shrink-0">
                                                         {typeTag ? typeTag.name : work.platform}
                                                     </span>
-                                                    <span className="text-sm text-gray-400 truncate border-l border-gray-200 pl-2 sm:pl-3 max-w-[4rem] sm:max-w-none">{work.author_name}</span>
+                                                    <span className="text-sm text-gray-400 truncate border-l border-gray-200 pl-2 sm:pl-3 max-w-[3rem] sm:max-w-none">{work.author_name}</span>
                                                 </Link>
 
                                                 <div className="ml-2 flex items-center gap-1">

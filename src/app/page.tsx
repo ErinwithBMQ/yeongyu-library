@@ -8,12 +8,12 @@ export default function Home() {
 
   return (
     <div className="container mx-auto min-h-[80vh] flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16 p-4">
-      {/* 左栏：Logo、标语、按钮 */}
+      {/* 左栏：Logo、标语 */}
       <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left animate-in slide-in-from-left duration-700">
         <div className="mb-8">
           <img src="/logo_2.png" alt="小章鱼存档地" className="h-20 md:h-32 w-auto object-contain" />
         </div>
-        <div className="mb-10 max-w-lg">
+        <div className="max-w-lg">
           <p className="text-gray-600 leading-relaxed">
             欢迎来到专属于小章鱼们的存档地~
             <br />
@@ -21,33 +21,6 @@ export default function Home() {
             <br />
             <span className="text-sm text-gray-400 mt-2 block font-medium">Only For Yeonjun and Beomgyu.</span>
           </p>
-        </div>
-
-        <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
-          <Link href="/library"
-            className="px-8 py-3 bg-white border-2 border-sakura text-bamguet-dark rounded-xl hover:bg-sakura-light hover:-translate-y-1 transition-all font-bold">
-            进入图书馆
-          </Link>
-
-          {!loading && (
-            user ? (
-              <Link href="/radio"
-                className="px-8 py-3 bg-white border-2 border-mint text-hwangchoon-dark rounded-xl hover:bg-mint-light hover:-translate-y-1 transition-all font-bold">
-                前往电台
-              </Link>
-            ) : (
-              <div className="flex gap-4">
-                <Link href="/login"
-                  className="px-8 py-3 bg-bamguet-dark text-white border-2 border-bamguet-dark rounded-xl hover:brightness-110 hover:-translate-y-1 transition-all font-bold">
-                  登录
-                </Link>
-                <Link href="/register"
-                  className="px-8 py-3 bg-white border-2 border-gray-200 text-gray-600 rounded-xl hover:bg-gray-50 hover:-translate-y-1 transition-all font-bold">
-                  注册
-                </Link>
-              </div>
-            )
-          )}
         </div>
       </div>
 
