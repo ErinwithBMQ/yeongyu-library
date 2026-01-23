@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <div className="container mx-auto min-h-[80vh] flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16 p-4">
       {/* 左栏：Logo、标语 */}
-      <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left animate-in slide-in-from-left duration-700">
+      <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left animate-in slide-in-from-left duration-700 mt-5">
         <div className="mb-8">
           <img src="/logo_2.png" alt="小章鱼存档地" className="h-20 md:h-32 w-auto object-contain" />
         </div>
