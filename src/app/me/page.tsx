@@ -3,15 +3,18 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { signOut, updatePassword } from '@/services/auth';
+import { signOut, updatePassword, getCurrentProfile } from '@/services/auth';
 import { toast } from 'sonner';
 import { showConfirm } from '@/lib/confirm';
+import { Profile } from '@/types';
 
 export default function MePage() {
     const { user, loading } = useAuth();
     const router = useRouter();
+    const [profile, setProfile] = useState<Profile | null>(null);
 
     const [newPassword, setNewPassword] = useState('');
+
     const [confirmPassword, setConfirmPassword] = useState('');
     const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
     const [isUpdating, setIsUpdating] = useState(false);
@@ -19,6 +22,11 @@ export default function MePage() {
     useEffect(() => {
         if (!loading && !user) {
             router.push('/login');
+        } else if (user) {
+            // 加载 Profile 真实数据
+            getCurrentProfile()
+                .then(p => setProfile(p))
+                .catch(err => console.error('Failed to load profile', err));
         }
     }, [user, loading, router]);
 
@@ -80,7 +88,7 @@ export default function MePage() {
                     </div>
                     <div>
                         <h2 className="text-xl font-bold text-gray-800">
-                            {user.user_metadata?.username || '小章鱼'}
+                            {profile?.username || user.user_metadata?.username || '小章鱼'}
                         </h2>
                         <p className="text-gray-500">{user.email}</p>
                     </div>
