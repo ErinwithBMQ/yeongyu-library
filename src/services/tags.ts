@@ -1,23 +1,12 @@
-import { supabase } from '@/lib/supabaseClient';
 import { Tag } from '@/types';
+import { fetchApi } from '@/lib/apiClient';
 
 /**
  * 获取所有标签
  * @returns Promise<Tag[]> 返回数据库中所有的标签列表
  */
 export const getAllTags = async (): Promise<Tag[]> => {
-    const { data, error } = await supabase
-        .from('tags')
-        .select('*')
-        .order('category', { ascending: true })
-        .order('name', { ascending: true });
-
-    if (error) {
-        console.error('Error fetching tags:', error);
-        throw error;
-    }
-
-    return data || [];
+    return fetchApi<Tag[]>('/tags');
 };
 
 
@@ -49,14 +38,9 @@ export const getTagsGroupedByCategory = async (): Promise<Record<string, Tag[]>>
             grouped[category].sort((a, b) => {
                 const indexA = orderList.indexOf(a.name);
                 const indexB = orderList.indexOf(b.name);
-
-                // 如果都在列表中，按列表顺序排
                 if (indexA !== -1 && indexB !== -1) return indexA - indexB;
-                // 如果只有A在列表中，A排前面
                 if (indexA !== -1) return -1;
-                // 如果只有B在列表中，B排前面
                 if (indexB !== -1) return 1;
-                // 都不在列表中，保持原名称排序
                 return a.name.localeCompare(b.name, 'zh-CN');
             });
         }

@@ -148,9 +148,8 @@ export default function RadioPage() {
 
     return (
         <div className="container mx-auto p-4 sm:p-8 max-w-6xl">
-            <header className="mb-5">
+            <header className="mb-4">
                 <h1 className="text-2xl sm:text-2xl font-bold text-bamguet-dark mb-2">真心定格电台</h1>
-                <p className="text-gray-500">电台来信、贴表情功能可能加载较慢，敬请谅解</p>
             </header>
             <div className="border-b border-gray-200 my-5"></div>
             <div className="flex flex-col gap-10">

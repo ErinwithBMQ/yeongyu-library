@@ -82,6 +82,7 @@ export default function AddWorkForm({ initialData, isEditMode = false }: AddWork
                     original_url: url,
                     platform,
                     summary,
+                    author_name: author,
                     tag_ids: selectedTagIds
                 });
                 toast.success('作品更新成功！');
@@ -142,16 +143,15 @@ export default function AddWorkForm({ initialData, isEditMode = false }: AddWork
                             className={`w-full px-4 py-2 rounded-lg border border-gray-200 outline-none transition ${isEditMode ? 'bg-gray-100 text-gray-500 cursor-not-allowed' : 'focus:border-sakura focus:ring-2 focus:ring-sakura-light'}`}
                             placeholder="填写作品名称，不需要书名号"
                         />
-                        {isEditMode && <p className="text-xs text-gray-400">作品名称和作者暂不支持修改</p>}
+                        {isEditMode && <p className="text-xs text-gray-400">作品名称不支持修改。</p>}
                     </div>
 
                     <div className="space-y-2">
                         <label className="block text-sm font-medium text-gray-700">作者 <span className="text-red-500">*</span></label>
                         <input
                             type="text" required
-                            disabled={isEditMode}
                             value={author} onChange={e => setAuthor(e.target.value)}
-                            className={`w-full px-4 py-2 rounded-lg border border-gray-200 outline-none transition ${isEditMode ? 'bg-gray-100 text-gray-500 cursor-not-allowed' : 'focus:border-sakura focus:ring-2 focus:ring-sakura-light'}`}
+                            className="w-full px-4 py-2 rounded-lg border border-gray-200 outline-none transition focus:border-sakura focus:ring-2 focus:ring-sakura-light"
                             placeholder="可以直接复制发表平台上的作者名"
                         />
                     </div>

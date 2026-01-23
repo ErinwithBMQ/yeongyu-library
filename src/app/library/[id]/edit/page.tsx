@@ -46,7 +46,6 @@ export default function EditWorkPage({ params }: { params: Promise<{ id: string 
                     </Link>
                 </div>
                 <h1 className="text-3xl font-bold text-bamguet-dark mb-2">编辑作品</h1>
-                <p className="text-gray-600">编辑作品信息，注意标题和作者不可修改。</p>
             </header>
 
             <AddWorkForm initialData={work} isEditMode={true} />
