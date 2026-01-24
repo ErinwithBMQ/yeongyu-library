@@ -109,8 +109,14 @@ export default function AddWorkForm({ initialData, isEditMode = false }: AddWork
             if (msg.includes('unique_work_url') || msg.includes('duplicate key')) {
                 msg = '该作品链接已存在，请勿重复添加！';
             }
+            // 针对常见的网络/Fetch错误 (通常对应数据库冷启动或网络中断)
+            else if (msg.includes('Failed to fetch') || msg.includes('NetworkError') || msg.includes('Load failed')) {
+                msg = '连接服务器超时，请耐心等待几秒后再次点击提交试试！';
+            }
 
-            toast.error('操作失败: ' + msg);
+            toast.error('操作失败: ' + msg, {
+                duration: 4000 // 延长显示时间让用户看清
+            });
         } finally {
             setSubmitting(false);
         }
