@@ -8,6 +8,7 @@ import { RadioMessage } from '@/types';
 import RadioMessageCard from '@/components/RadioMessageCard';
 import Pagination from '@/components/Pagination';
 import { toast } from 'sonner';
+import useSWR from 'swr';
 // import { getWorks } from '@/services/works';
 
 interface MessageWithReactions extends RadioMessage {
@@ -27,18 +28,15 @@ export default function RadioPage() {
     const { user, loading } = useAuth();
     const router = useRouter();
 
-    const [messages, setMessages] = useState<MessageWithReactions[]>([]);
+    // const [messages, setMessages] = useState<MessageWithReactions[]>([]); // Replaced by SWR
     const [nickname, setNickname] = useState('');
     const [content, setContent] = useState('');
-    // const [linkedWorkId, setLinkedWorkId] = useState<number | undefined>();
-    // const [works, setWorks] = useState<Work[]>([]);
-    // const [showWorkSelector, setShowWorkSelector] = useState(false);
     const [submitting, setSubmitting] = useState(false);
-    const [loadingMessages, setLoadingMessages] = useState(true);
+    // const [loadingMessages, setLoadingMessages] = useState(true); // Replaced by SWR
 
     // Filter & Pagination & UI States
     const [page, setPage] = useState(1);
-    const [total, setTotal] = useState(0);
+    // const [total, setTotal] = useState(0); // Replaced by SWR
     const pageSize = 9;
 
     useEffect(() => {
@@ -47,48 +45,29 @@ export default function RadioPage() {
         }
     }, [user, loading, router]);
 
-    // 加载留言列表
-    // 使用 user?.id 作为依赖，避免因 user 对象引用变化导致频繁刷新
-    useEffect(() => {
-        if (user?.id) {
-            loadMessages();
-        }
-    }, [user?.id, page]);
-
-    const loadMessages = async () => {
-        try {
-            setLoadingMessages(true);
+    // SWR Fetcher
+    const { data: swrData, isLoading: loadingMessages, mutate } = useSWR(
+        user?.id ? ['/api/radio/messages', page] : null,
+        async () => {
             const { data, total } = await getRadioMessages(page, pageSize);
-
-            // 为每条留言加载表情统计
             const messagesWithReactions = await Promise.all(
                 data.map(async (msg) => {
                     const reactions = await getMessageReactions(msg.id);
-                    return {
-                        ...msg,
-                        reactions
-                    };
+                    return { ...msg, reactions };
                 })
             );
-
-            setMessages(messagesWithReactions);
-            setTotal(total);
-        } catch (error) {
-            console.error('加载留言失败:', error);
-            // 避免在用户切换页面时频繁弹窗，改为console log或者静默失败
-        } finally {
-            setLoadingMessages(false);
+            return { messages: messagesWithReactions, total };
+        },
+        {
+            keepPreviousData: true,
+            revalidateOnFocus: false
         }
-    };
+    );
 
-    /* const loadWorks = async () => {
-        try {
-            const { data } = await getWorks({ page: 1, pageSize: 100 });
-            setWorks(data);
-        } catch (error) {
-            console.error('加载作品列表失败:', error);
-        }
-    }; */
+    const messages = swrData?.messages || [];
+    const total = swrData?.total || 0;
+
+    /* Removed manual loadMessages */
 
     const handleSubmit = async () => {
         if (!content.trim()) {
@@ -115,7 +94,7 @@ export default function RadioPage() {
             // setLinkedWorkId(undefined);
 
             // 重新加载留言列表
-            await loadMessages();
+            await mutate();
 
             toast.success('留言发送成功！');
         } catch (error) {
@@ -146,8 +125,6 @@ export default function RadioPage() {
             // 切换状态: 如果之前点了，现在就是取消（-1）；没点就是点赞（+1）
             const newCount = wasReacted ? info.count - 1 : info.count + 1;
 
-            // 更新记录(如果数量归零，前端暂时保留显示但为0，或者组件层会隐藏它可以根据原来的逻辑)
-            // 这里我们更新状态
             newReactions[infoIndex] = {
                 ...info,
                 count: newCount,
@@ -162,22 +139,27 @@ export default function RadioPage() {
             });
         }
 
-        // 3. 立即应用乐观更新
-        setMessages(prev => prev.map(msg =>
+        // 3. 构造新的消息列表用于乐观更新
+        const newMessages = messages.map(msg =>
             msg.id === messageId ? { ...msg, reactions: newReactions } : msg
-        ));
+        );
 
-        // 4. 发送请求
+        const newData = { messages: newMessages, total };
+
+        // 4. 立即应用乐观更新 (mutate with optimistic data, do not revalidate yet)
+        mutate(newData, false);
+
+        // 5. 发送请求
         try {
             await toggleReaction(messageId, emoji);
-            // 请求成功，什么都不做，相信乐观更新的结果
+            // 请求成功，可以选择静默，或者后台静默重新校验以确保数据一致性
+            // 这里我们选择静默，因为我们很自信，或者可以 mutate() 触发重新拉取
+            // 但为了防止表情跳变（重新拉取会重置 count），我们可以只在出错时回滚
         } catch (error) {
             console.error('表情操作失败:', error);
 
-            // 5. 请求失败，回滚状态
-            setMessages(prev => prev.map(msg =>
-                msg.id === messageId ? { ...msg, reactions: originalReactions } : msg
-            ));
+            // 6. 请求失败，回滚状态 (trigger revalidation to restore truth)
+            mutate();
 
             // 提示用户
             toast.error('网络开小差了，点赞失败');

@@ -7,6 +7,7 @@ import { getTagsGroupedByCategory } from '@/services/tags';
 import { WorkWithTags, Tag } from '@/types';
 import Link from 'next/link';
 import Pagination from './Pagination';
+import useSWR from 'swr';
 
 interface LibraryViewProps {
     sortOrder?: 'newest' | 'oldest';
@@ -14,14 +15,14 @@ interface LibraryViewProps {
 
 export default function LibraryView({ sortOrder = 'newest' }: LibraryViewProps) {
     const router = useRouter();
-    const [works, setWorks] = useState<WorkWithTags[]>([]);
-    const [loading, setLoading] = useState(true);
+    // const [works, setWorks] = useState<WorkWithTags[]>([]);
+    // const [loading, setLoading] = useState(true);
     const [groupedTags, setGroupedTags] = useState<Record<string, Tag[]>>({});
 
     // Filter States
     const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
     const [page, setPage] = useState(1);
-    const [total, setTotal] = useState(0);
+    // const [total, setTotal] = useState(0);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     // Search States
@@ -34,35 +35,33 @@ export default function LibraryView({ sortOrder = 'newest' }: LibraryViewProps) 
     // 与 AddWorkForm.tsx 保持一致的顺序
     const categoryOrder = ['类型', '世界观', '篇幅', '进度', '预警', '情感', '背景', '剧情', '人设', '特殊设定', '幻想设定'];
 
-    // Load Tags on mount
+    // Load Tags on mount (Tags change rarely, so standard fetch is fine, or could use SWR with high revalidate time)
     useEffect(() => {
         getTagsGroupedByCategory().then(setGroupedTags);
     }, []);
 
-    // Load Works when filters change
-    useEffect(() => {
-        fetchWorks();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedTagIds, page, appliedQuery, sortOrder]);
-
-    const fetchWorks = async () => {
-        setLoading(true);
-        try {
-            const { data, total } = await getWorks({
-                page,
-                pageSize,
-                filterTagIds: selectedTagIds,
-                searchQuery: appliedQuery,
-                sort: sortOrder
-            });
-            setWorks(data);
-            setTotal(total);
-        } catch (error) {
-            console.error('Failed to fetch works', error);
-        } finally {
-            setLoading(false);
-        }
+    // SWR Fetcher for Works
+    const worksKey = {
+        key: 'works',
+        page,
+        pageSize,
+        filterTagIds: selectedTagIds,
+        searchQuery: appliedQuery,
+        sort: sortOrder
     };
+
+    const { data: worksData, isLoading: loading } = useSWR(worksKey, async (params) => {
+        return await getWorks(params);
+    }, {
+        keepPreviousData: true, // 核心：保留旧数据直到新数据加载完成
+        revalidateOnFocus: false, // 避免切窗口时频繁刷新
+    });
+
+    const works = worksData?.data || [];
+    const total = worksData?.total || 0;
+
+    /* Removed manual fetchWorks and useEffect */
+
 
     const handleRandomWork = async () => {
         // Show a simple loading approach or just navigate

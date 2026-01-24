@@ -8,17 +8,18 @@ import { getMyFolders, createFolder, deleteFolder, getFolderWorks, removeWorkFro
 import Link from 'next/link';
 import { toast } from 'sonner';
 import { showConfirm } from '@/lib/confirm';
+import useSWR from 'swr';
 
 export default function FavoritesPage() {
     const { user, loading } = useAuth();
     const router = useRouter();
 
-    const [folders, setFolders] = useState<FavoriteFolder[]>([]);
+    // const [folders, setFolders] = useState<FavoriteFolder[]>([]);
     const [selectedFolderId, setSelectedFolderId] = useState<number | null>(null);
-    const [works, setWorks] = useState<(Work & { added_at: string, tags?: Tag[] })[]>([]);
+    // const [works, setWorks] = useState<(Work & { added_at: string, tags?: Tag[] })[]>([]);
 
-    const [loadingFolders, setLoadingFolders] = useState(true);
-    const [loadingWorks, setLoadingWorks] = useState(false);
+    // const [loadingFolders, setLoadingFolders] = useState(true);
+    // const [loadingWorks, setLoadingWorks] = useState(false);
 
     // 创建收藏夹状态
     const [isCreating, setIsCreating] = useState(false);
@@ -30,55 +31,40 @@ export default function FavoritesPage() {
         }
     }, [user, loading, router]);
 
-    // 加载收藏夹列表
-    useEffect(() => {
-        if (user?.id) {
-            loadFolders();
-        }
-    }, [user?.id]);
-
-    // 当选中文件夹改变时，加载该文件夹的作品
-    useEffect(() => {
-        if (selectedFolderId) {
-            loadFolderWorks(selectedFolderId);
-        } else {
-            setWorks([]);
-        }
-    }, [selectedFolderId]);
-
-    const loadFolders = async () => {
-        try {
-            setLoadingFolders(true);
-            const data = await getMyFolders();
-            setFolders(data);
-            // 默认选中第一个文件夹 (如果有)
-            if (data.length > 0 && !selectedFolderId) {
-                setSelectedFolderId(data[0].id);
+    // SWR for Folders
+    const { data: folders = [], isLoading: loadingFolders, mutate: mutateFolders } = useSWR(
+        user?.id ? '/api/favorites/folders' : null,
+        getMyFolders,
+        {
+            revalidateOnFocus: false,
+            onSuccess: (data) => {
+                // 默认选中第一个文件夹 (如果有)
+                if (data.length > 0 && !selectedFolderId) {
+                    setSelectedFolderId(data[0].id);
+                }
             }
-        } catch (error) {
-            console.error('加载收藏夹失败', error);
-        } finally {
-            setLoadingFolders(false);
         }
-    };
+    );
 
-    const loadFolderWorks = async (folderId: number) => {
-        try {
-            setLoadingWorks(true);
-            const data = await getFolderWorks(folderId);
-            setWorks(data);
-        } catch (error) {
-            console.error('加载收藏作品失败', error);
-        } finally {
-            setLoadingWorks(false);
+    // SWR for Works in selected folder
+    const { data: works = [], isLoading: loadingWorks, mutate: mutateWorks } = useSWR(
+        selectedFolderId ? ['/api/favorites/folder/works', selectedFolderId] : null,
+        ([, id]) => getFolderWorks(id as number),
+        {
+            keepPreviousData: true
         }
-    };
+    );
+
+    /* Removed manual loadFolders, loadFolderWorks useEffects */
 
     const handleCreateFolder = async () => {
         if (!newFolderName.trim()) return;
         try {
             const newFolder = await createFolder(newFolderName.trim());
-            setFolders([newFolder, ...folders]);
+            // 乐观更新或由于使用了SWR，可以直接mutate更新
+            await mutateFolders([newFolder, ...folders], false); // Optimistic update (optional) or just revalidate
+            // Or simple revalidate: await mutateFolders();
+
             setNewFolderName('');
             setIsCreating(false);
             // 切换到新创建的文件夹
@@ -86,15 +72,21 @@ export default function FavoritesPage() {
         } catch (error) {
             console.error('创建收藏夹失败', error);
             toast.error('创建失败，请稍后重试');
+            mutateFolders(); // Revert/Fetch true data
         }
     };
 
     const handleDeleteFolder = (folderId: number, folderName: string) => {
         showConfirm(`确定要删除收藏夹 "${folderName}" 吗？`, async () => {
             try {
-                await deleteFolder(folderId);
+                // Optimistic UI for delete
                 const newFolders = folders.filter(f => f.id !== folderId);
-                setFolders(newFolders);
+                mutateFolders(newFolders, false);
+
+                await deleteFolder(folderId);
+
+                // Trigger revalidation to be safe
+                mutateFolders();
 
                 // 如果删除的是当前选中的，切换选中状态
                 if (selectedFolderId === folderId) {
@@ -104,6 +96,7 @@ export default function FavoritesPage() {
             } catch (error) {
                 console.error('删除收藏夹失败', error);
                 toast.error('删除失败');
+                mutateFolders(); // Revert
             }
         }, {
             description: '此操作不可恢复，且会移除其中的所有收藏记录。',
@@ -120,12 +113,17 @@ export default function FavoritesPage() {
                 label: '移除',
                 onClick: async () => {
                     try {
+                        const newWorks = works.filter(w => w.id !== workId);
+                        mutateWorks(newWorks, false); // Optimistic UI
+
                         await removeWorkFromFolder(selectedFolderId, workId);
-                        setWorks(works.filter(w => w.id !== workId));
+
+                        mutateWorks(); // Revalidate
                         toast.success('已移除');
                     } catch (error) {
                         console.error('移出失败', error);
                         toast.error('操作失败');
+                        mutateWorks(); // Revert
                     }
                 }
             },
