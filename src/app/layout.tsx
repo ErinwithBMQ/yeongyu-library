@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
@@ -19,6 +19,16 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "小章鱼存档地",
   description: "产出整理站 + 匿名树洞",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "小章鱼存档地",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#8B4513",
 };
 
 export default function RootLayout({
