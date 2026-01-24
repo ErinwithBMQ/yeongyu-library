@@ -103,7 +103,14 @@ export default function AddWorkForm({ initialData, isEditMode = false }: AddWork
             router.refresh();
         } catch (error: any) {
             console.error('提交失败', error);
-            toast.error('操作失败: ' + (error.message || '未知错误'));
+            let msg = error.message || '未知错误';
+
+            // 针对唯一性约束优化报错提示
+            if (msg.includes('unique_work_url') || msg.includes('duplicate key')) {
+                msg = '该作品链接已存在，请勿重复添加！';
+            }
+
+            toast.error('操作失败: ' + msg);
         } finally {
             setSubmitting(false);
         }
