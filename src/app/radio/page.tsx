@@ -127,17 +127,60 @@ export default function RadioPage() {
     };
 
     const handleReact = async (messageId: number, emoji: string) => {
+        // 1. 找到当前要操作的留言及其原始状态（用于回滚）
+        const messageIndex = messages.findIndex(m => m.id === messageId);
+        if (messageIndex === -1) return;
+
+        const originalMessage = messages[messageIndex];
+        const originalReactions = originalMessage.reactions || [];
+
+        // 2. 构造新的 reactions 数组（乐观更新逻辑）
+        let newReactions = [...originalReactions];
+        const infoIndex = newReactions.findIndex(r => r.emoji === emoji);
+
+        if (infoIndex > -1) {
+            // 已存在该表情记录
+            const info = newReactions[infoIndex];
+            const wasReacted = info.userReacted;
+
+            // 切换状态: 如果之前点了，现在就是取消（-1）；没点就是点赞（+1）
+            const newCount = wasReacted ? info.count - 1 : info.count + 1;
+
+            // 更新记录(如果数量归零，前端暂时保留显示但为0，或者组件层会隐藏它可以根据原来的逻辑)
+            // 这里我们更新状态
+            newReactions[infoIndex] = {
+                ...info,
+                count: newCount,
+                userReacted: !wasReacted
+            };
+        } else {
+            // 不存在该表情记录，说明是新的点赞
+            newReactions.push({
+                emoji,
+                count: 1,
+                userReacted: true
+            });
+        }
+
+        // 3. 立即应用乐观更新
+        setMessages(prev => prev.map(msg =>
+            msg.id === messageId ? { ...msg, reactions: newReactions } : msg
+        ));
+
+        // 4. 发送请求
         try {
             await toggleReaction(messageId, emoji);
-
-            // 更新该留言的表情统计
-            const reactions = await getMessageReactions(messageId);
-            setMessages(prev => prev.map(msg =>
-                msg.id === messageId ? { ...msg, reactions } : msg
-            ));
+            // 请求成功，什么都不做，相信乐观更新的结果
         } catch (error) {
             console.error('表情操作失败:', error);
-            toast.error('操作失败，请稍后再试');
+
+            // 5. 请求失败，回滚状态
+            setMessages(prev => prev.map(msg =>
+                msg.id === messageId ? { ...msg, reactions: originalReactions } : msg
+            ));
+
+            // 提示用户
+            toast.error('网络开小差了，点赞失败');
         }
     };
 
