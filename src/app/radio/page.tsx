@@ -166,11 +166,16 @@ export default function RadioPage() {
             // 切换状态: 如果之前点了，现在就是取消（-1）；没点就是点赞（+1）
             const newCount = wasReacted ? info.count - 1 : info.count + 1;
 
-            newReactions[infoIndex] = {
-                ...info,
-                count: newCount,
-                userReacted: !wasReacted
-            };
+            if (newCount > 0) {
+                newReactions[infoIndex] = {
+                    ...info,
+                    count: newCount,
+                    userReacted: !wasReacted
+                };
+            } else {
+                // 如果数量归零，直接从数组中移除，实现“消失”效果
+                newReactions.splice(infoIndex, 1);
+            }
         } else {
             // 不存在该表情记录，说明是新的点赞
             newReactions.push({
