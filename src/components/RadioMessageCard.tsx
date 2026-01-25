@@ -77,29 +77,31 @@ export default function RadioMessageCard({ message, onReact }: RadioMessageCardP
                 )}
             </div>
 
-            {/* 引用的作品 - 暂时移除 */}
-            {/* {message.linked_work && (
-                <Link
-                    href={`/library/${message.linked_work.id}`}
-                    className="inline-flex items-center gap-2 px-3 py-1.5 bg-mint/20 text-teal-700 rounded-full text-sm hover:bg-mint/30 transition"
-                >
-                    <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+            {/* 引用的作品 */}
+            {message.linked_work && (
+                <div className="mt-2 text-right">
+                    <Link
+                        href={`/library/${message.linked_work.id}`}
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white/50 border border-bamguet/30 text-bamguet-dark hover:bg-bamguet hover:text-white rounded-full text-xs transition-colors duration-200"
+                        title={message.linked_work.title}
                     >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                        />
-                    </svg>
-                    <span>{message.linked_work.title}</span>
-                    <span className="text-xs text-gray-500">by {message.linked_work.author_name}</span>
-                </Link>
-            )} */}
+                        <svg
+                            className="w-3.5 h-3.5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={1.5}
+                                d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+                            />
+                        </svg>
+                        <span>推荐：{message.linked_work.title}</span>
+                    </Link>
+                </div>
+            )}
 
             {/* 表情反应区 */}
             <div className="flex items-center gap-2 mt-4 flex-wrap">

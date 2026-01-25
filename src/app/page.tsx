@@ -1,11 +1,6 @@
 'use client';
 
-import Link from 'next/link';
-import { useAuth } from '@/context/AuthContext';
-
 export default function Home() {
-  const { user, loading } = useAuth();
-
   return (
     <div className="container mx-auto min-h-[80vh] flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16 p-4">
       {/* 左栏：Logo、标语 */}
@@ -24,7 +19,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* 右栏：网站须知 + 更新公告 */}
+      {/* 右栏：网站须知 + 其他公告 */}
       <div className="flex-1 w-full max-w-xl space-y-6 animate-in slide-in-from-right duration-700">
         {/* 网站须知 */}
         <div className="bg-white/90 backdrop-blur-sm p-6 rounded-2xl border border-sakura transition-shadow">
@@ -45,10 +40,10 @@ export default function Home() {
           </div>
         </div>
 
-        {/* 更新公告 */}
+        {/* 其他公告 */}
         <div className="bg-white/90 backdrop-blur-sm p-6 rounded-2xl border border-mint transition-shadow">
           <h2 className="text-xl font-bold mb-4 text-hwangchoon-dark flex items-center gap-2">
-            <span className="text-2xl">📢</span> 更新公告
+            <span className="text-2xl">📢</span> 其他公告
           </h2>
           <div className="text-gray-600 space-y-2 min-h-[100px] bg-gray-50/50 p-4 rounded-xl border border-dashed border-gray-200">
             <p className="text-sm text-gray-400">暂无公告</p>
