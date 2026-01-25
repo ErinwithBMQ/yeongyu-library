@@ -56,7 +56,7 @@ export default function RadioPage() {
                 try {
                     const { data } = await getWorks({
                         searchQuery: searchQuery,
-                        pageSize: 5
+                        pageSize: 20
                     });
                     setSearchResults(data);
                     setShowResults(true);
@@ -289,7 +289,7 @@ export default function RadioPage() {
                             </div>
 
                             {/* 内容输入 */}
-                            <div className="mb-6">
+                            <div className="mb-3">
                                 <label className="block text-sm font-medium text-gray-700 mb-1.5">
                                     内容 <span className="text-xs text-gray-400 font-normal">({content.length}字)</span>
                                 </label>
@@ -302,7 +302,7 @@ export default function RadioPage() {
                             </div>
 
                             {/* 引用作品 (可选) */}
-                            <div className="mb-4 relative">
+                            <div className="mb-6 relative">
                                 <label className="block text-sm font-medium text-gray-700 mb-1.5">
                                     推荐作品 <span className="text-xs text-gray-400 font-normal">(可选，输入标题或作者搜索)</span>
                                 </label>
