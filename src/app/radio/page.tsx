@@ -97,13 +97,7 @@ export default function RadioPage() {
         user?.id ? ['/api/radio/messages', page] : null,
         async () => {
             const { data, total } = await getRadioMessages(page, pageSize);
-            const messagesWithReactions = await Promise.all(
-                data.map(async (msg) => {
-                    const reactions = await getMessageReactions(msg.id);
-                    return { ...msg, reactions };
-                })
-            );
-            return { messages: messagesWithReactions, total };
+            return { messages: data, total };
         },
         {
             keepPreviousData: true,

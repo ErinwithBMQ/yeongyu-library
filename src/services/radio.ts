@@ -18,7 +18,10 @@ export interface CreateMessageParams {
  */
 export const getRadioMessages = async (page = 1, pageSize = 10) => {
     return fetchApi<{
-        data: (RadioMessage & { linked_work?: { id: number; title: string; author_name: string } })[];
+        data: (RadioMessage & {
+            linked_work?: { id: number; title: string; author_name: string };
+            reactions?: { emoji: string; count: number; userReacted: boolean }[];
+        })[];
         total: number;
     }>('/radio', {
         params: { page, pageSize }

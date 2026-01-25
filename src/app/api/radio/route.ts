@@ -10,7 +10,12 @@ export async function GET(request: NextRequest) {
         const from = (page - 1) * pageSize;
         const to = from + pageSize - 1;
 
-        const supabase = createServerSupabaseClient();
+        const authHeader = request.headers.get('Authorization');
+        const supabase = createServerSupabaseClient(authHeader);
+
+        // Get current user for userReacted check
+        const { data: { user } } = await supabase.auth.getUser();
+
         const { data, error, count } = await supabase
             .from('radio_messages')
             .select(`
@@ -19,6 +24,10 @@ export async function GET(request: NextRequest) {
           id,
           title,
           author_name
+        ),
+        radio_reactions (
+            user_id,
+            emoji
         )
       `, { count: 'exact' })
             .order('created_at', { ascending: false })
@@ -26,8 +35,37 @@ export async function GET(request: NextRequest) {
 
         if (error) throw error;
 
+        // Transform data to group reactions
+        const formattedData = data.map((msg: any) => {
+            const reactionsMap = new Map<string, { count: number; userReacted: boolean }>();
+
+            if (msg.radio_reactions) {
+                msg.radio_reactions.forEach((reaction: any) => {
+                    const existing = reactionsMap.get(reaction.emoji) || { count: 0, userReacted: false };
+                    existing.count++;
+                    if (user && reaction.user_id === user.id) {
+                        existing.userReacted = true;
+                    }
+                    reactionsMap.set(reaction.emoji, existing);
+                });
+            }
+
+            const reactions = Array.from(reactionsMap.entries()).map(([emoji, val]) => ({
+                emoji,
+                count: val.count,
+                userReacted: val.userReacted
+            }));
+
+            // Remove raw radio_reactions and return clean object
+            const { radio_reactions, ...rest } = msg;
+            return {
+                ...rest,
+                reactions
+            };
+        });
+
         return NextResponse.json({
-            data,
+            data: formattedData,
             total: count || 0
         });
     } catch (err: any) {
