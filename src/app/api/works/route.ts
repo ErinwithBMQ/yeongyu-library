@@ -90,9 +90,16 @@ export async function GET(request: NextRequest) {
         tags: item.work_tags?.map((wt: any) => wt.tags).filter(Boolean) || []
     }));
 
+    // 作品列表缓存策略调整：
+    // s-maxage=10: 只缓存10秒，防止瞬时并发打崩数据库。
+    // 10秒的延迟对用户几乎无感，但能把 RPS 承载力提升一个数量级。
     return NextResponse.json({
         data: formattedData,
         total: count || 0
+    }, {
+        headers: {
+            'Cache-Control': 'public, s-maxage=10, stale-while-revalidate=60'
+        }
     });
 }
 
