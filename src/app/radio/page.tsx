@@ -308,7 +308,7 @@ export default function RadioPage() {
                             </div>
 
                             {/* 引用作品 (可选) */}
-                            <div className="mb-6 relative">
+                            <div className="mb-4 relative">
                                 <label className="block text-sm font-medium text-gray-700 mb-1.5">
                                     推荐作品 <span className="text-xs text-gray-400 font-normal">(可选，输入标题或作者搜索)</span>
                                 </label>
@@ -340,7 +340,7 @@ export default function RadioPage() {
                                                 onChange={(e) => setSearchQuery(e.target.value)}
                                                 onKeyDown={handleKeydown}
                                                 className="w-full rounded-md border-gray-200 p-3 pl-9 focus:ring-2 focus:ring-gray-400 focus:border-transparent text-sm bg-gray-50 transition-all"
-                                                placeholder="搜索同人文..."
+                                                placeholder="搜索作品..."
                                             />
                                             <svg className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />

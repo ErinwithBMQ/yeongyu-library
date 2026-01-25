@@ -22,8 +22,13 @@ export default function LoginPage() {
             router.push('/library'); // Redirect to home on success
             router.refresh();
         } catch (err: any) {
-            console.error(err);
-            setError(err.message || '登录失败，请检查邮箱和密码');
+            console.error('Login failure:', err);
+            // 使用 includes 进行更宽松的匹配，以防有细微标点或空格差异
+            if (err.message?.includes('Invalid login credentials')) {
+                setError('账号或密码错误');
+            } else {
+                setError(err.message || '登录失败，请检查邮箱和密码');
+            }
         } finally {
             setLoading(false);
         }
