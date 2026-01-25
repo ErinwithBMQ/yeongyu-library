@@ -17,7 +17,14 @@ export async function GET(request: NextRequest) {
     let query = supabase
         .from('works')
         .select(`
-            *,
+            id,
+            title,
+            author_name,
+            original_url,
+            platform,
+            summary,
+            created_at,
+            submitter_id,
             work_tags (
                 tag_id,
                 tags (

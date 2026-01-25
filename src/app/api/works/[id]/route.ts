@@ -10,7 +10,14 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
         const { data, error } = await supabase
             .from('works')
             .select(`
-            *,
+            id,
+            title,
+            author_name,
+            original_url,
+            platform,
+            summary,
+            created_at,
+            submitter_id,
             work_tags (
                 tag_id,
                 tags (

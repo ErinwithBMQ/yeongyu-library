@@ -19,7 +19,12 @@ export async function GET(request: NextRequest) {
         const { data, error, count } = await supabase
             .from('radio_messages')
             .select(`
-        *,
+        id,
+        user_id,
+        nickname,
+        content,
+        linked_work_id,
+        created_at,
         linked_work:works (
           id,
           title,
