@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { FavoriteFolder, Work, Tag } from '@/types';
 import { getMyFolders, createFolder, deleteFolder, getFolderWorks, removeWorkFromFolder } from '@/services/favorites';
 import Link from 'next/link';
 import { toast } from 'sonner';
@@ -13,13 +12,7 @@ import useSWR from 'swr';
 export default function FavoritesPage() {
     const { user, loading } = useAuth();
     const router = useRouter();
-
-    // const [folders, setFolders] = useState<FavoriteFolder[]>([]);
     const [selectedFolderId, setSelectedFolderId] = useState<number | null>(null);
-    // const [works, setWorks] = useState<(Work & { added_at: string, tags?: Tag[] })[]>([]);
-
-    // const [loadingFolders, setLoadingFolders] = useState(true);
-    // const [loadingWorks, setLoadingWorks] = useState(false);
 
     // 创建收藏夹状态
     const [isCreating, setIsCreating] = useState(false);

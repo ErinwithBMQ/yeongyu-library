@@ -27,7 +27,7 @@ export default function Home() {
             <span className="text-2xl">📋</span> 网站须知
           </h2>
           <div className="text-gray-600 space-y-2 min-h-[100px] bg-gray-50/50 p-4 rounded-xl border border-dashed border-gray-200">
-            <p className="text-sm text-gray-400">本站是专属于韩国男团 TXT cp 准奎（崔然竣×崔杋圭）的产出整理站。
+            <p className="text-sm text-gray-400">本站是专属于韩国男团 TOMORROW X TOGETHER cp 准奎（崔然竣×崔杋圭）的产出整理站。
               <br />
               本站禁拆逆、禁引战，采用邀请码制注册。未登录的用户仅可浏览图书馆页面，使用部分功能。
               <br />
@@ -46,7 +46,9 @@ export default function Home() {
             <span className="text-2xl">📢</span> 其他公告
           </h2>
           <div className="text-gray-600 space-y-2 min-h-[100px] bg-gray-50/50 p-4 rounded-xl border border-dashed border-gray-200">
-            <p className="text-sm text-gray-400">暂无公告</p>
+            <p className="text-sm text-gray-400">
+              2026.2.4 - 网站正式上线！欢迎小章鱼们注册使用~
+            </p>
           </div>
         </div>
       </div>
