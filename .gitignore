@@ -41,3 +41,11 @@ yarn-error.log*
 next-env.d.ts
 
 /public
+
+# Private Docs
+docs/电台功能使用说明.md
+docs/数据库表结构.md
+docs/数据库权限更新v1.1.sql
+docs/数据库权限更新v1.2.sql
+docs/项目文档v1.0.md
+docs/项目api升级文档.md
