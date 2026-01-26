@@ -45,7 +45,3 @@ next-env.d.ts
 # Private Docs - Ignore entire docs folder
 docs/
 
-# Database Scripts (Ignore all except full_schema.sql)
-sql/*
-!sql/full_schema.sql
-
