@@ -16,21 +16,29 @@ const AuthContext = createContext<AuthContextType>({
     loading: true,
 });
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-    const [user, setUser] = useState<User | null>(null);
-    const [session, setSession] = useState<Session | null>(null);
-    const [loading, setLoading] = useState(true);
+export const AuthProvider = ({
+    children,
+    initialSession
+}: {
+    children: React.ReactNode;
+    initialSession?: Session | null;
+}) => {
+    const [user, setUser] = useState<User | null>(initialSession?.user ?? null);
+    const [session, setSession] = useState<Session | null>(initialSession ?? null);
+    // If initialSession is provided (including null), we don't need to load
+    const [loading, setLoading] = useState(initialSession === undefined);
 
     useEffect(() => {
-        // Fetch current session
-        const getSession = async () => {
-            const { data: { session } } = await supabase.auth.getSession();
-            setSession(session);
-            setUser(session?.user ?? null);
-            setLoading(false);
-        };
-
-        getSession();
+        // Only fetch if no initial session provided
+        if (initialSession === undefined) {
+            const getSession = async () => {
+                const { data: { session } } = await supabase.auth.getSession();
+                setSession(session);
+                setUser(session?.user ?? null);
+                setLoading(false);
+            };
+            getSession();
+        }
 
         // Listen for changes
         const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -40,7 +48,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         });
 
         return () => subscription.unsubscribe();
-    }, []);
+    }, [initialSession]);
 
     return (
         <AuthContext.Provider value={{ user, session, loading }}>

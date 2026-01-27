@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { signIn } from '@/services/auth';
+import { toast } from 'sonner';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -19,6 +20,7 @@ export default function LoginPage() {
 
         try {
             await signIn(email, password);
+            toast.success('登录成功！');
             router.push('/library'); // Redirect to home on success
             router.refresh();
         } catch (err: any) {
@@ -26,6 +28,8 @@ export default function LoginPage() {
             // 使用 includes 进行更宽松的匹配，以防有细微标点或空格差异
             if (err.message?.includes('Invalid login credentials')) {
                 setError('账号或密码错误');
+            } else if (err.message?.includes('Email not confirmed')) {
+                setError('邮箱未验证，请前往邮箱点击验证链接后再试');
             } else {
                 setError(err.message || '登录失败，请检查邮箱和密码');
             }
