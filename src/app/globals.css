@@ -13,6 +13,7 @@
   --bamguet: #ffbfbf;
   --bamguet-light: #fff0f0;
   --bamguet-dark: #c7414a;
+  color-scheme: light;
 }
 
 @theme inline {
@@ -39,12 +40,12 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
+} */
 
 body {
   background: var(--background);
