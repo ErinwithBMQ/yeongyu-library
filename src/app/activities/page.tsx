@@ -104,7 +104,7 @@ export default function ActivitiesPage() {
                             2026 情人节
                         </div>
                         <h3 className="text-2xl font-bold text-gray-800">
-                            玫瑰花礼 准奎214情人节联产
+                            玫瑰花礼 准奎情人节联产
                         </h3>
                         <p className="text-gray-600 leading-relaxed">
                             “这一次，我想送你不一样的玫瑰。” coming soon...

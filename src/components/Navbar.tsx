@@ -53,10 +53,10 @@ export default function Navbar() {
                     <img src="/logo_2.png" alt="小章鱼存档地" className="h-10 w-auto object-contain" />
                 </Link>
             </div>
-            <div className="flex gap-6 items-center">
+            <div className="flex gap-3 sm:gap-6 items-center">
                 <Link href="/library" className="group flex flex-col items-center gap-0.5 text-xs font-medium text-gray-600 hover:text-bamguet-dark transition-colors">
                     <LibraryBig className="w-5 h-5 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
-                    <span>图书馆</span>
+                    <span className="hidden sm:block">图书馆</span>
                 </Link>
                 {loading ? (
                     // Optional: Skeleton loader or just empty
@@ -65,26 +65,26 @@ export default function Navbar() {
                     <>
                         <Link href="/activities" className="group flex flex-col items-center gap-0.5 text-xs font-medium text-gray-600 hover:text-bamguet-dark transition-colors">
                             <PartyPopper className="w-5 h-5 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
-                            <span>联产</span>
+                            <span className="hidden sm:block">联产</span>
                         </Link>
                         <Link href="/radio" className="group flex flex-col items-center gap-0.5 text-xs font-medium text-gray-600 hover:text-bamguet-dark transition-colors">
                             <Radio className="w-5 h-5 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
-                            <span>电台</span>
+                            <span className="hidden sm:block">电台</span>
                         </Link>
                         <Link href="/favorites" className="group flex flex-col items-center gap-0.5 text-xs font-medium text-gray-600 hover:text-bamguet-dark transition-colors">
                             <Heart className="w-5 h-5 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
-                            <span>收藏夹</span>
+                            <span className="hidden sm:block">收藏夹</span>
                         </Link>
                         <Link href="/me" className="group flex flex-col items-center gap-0.5 text-xs font-medium text-gray-600 hover:text-bamguet-dark transition-colors">
                             <User className="w-5 h-5 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
-                            <span>我</span>
+                            <span className="hidden sm:block">我</span>
                         </Link>
                         {/* Optionally add a logout button here or keep it in "Me" page, asking for "Navbar" changes usually implies visibility of main links */}
                     </>
                 ) : (
                     <Link href="/login" className="group flex flex-col items-center gap-0.5 text-xs font-medium text-gray-600 hover:text-bamguet-dark transition-colors">
                         <LogIn className="w-6 h-6 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
-                        <span>登录</span>
+                        <span className="hidden sm:block">登录</span>
                     </Link>
                 )}
             </div>
