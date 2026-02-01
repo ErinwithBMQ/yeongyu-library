@@ -53,7 +53,7 @@ export default function Navbar() {
                     <img src="/logo_2.png" alt="小章鱼存档地" className="h-10 w-auto object-contain" />
                 </Link>
             </div>
-            <div className="flex gap-3 sm:gap-6 items-center">
+            <div className="flex gap-5 sm:gap-6 items-center">
                 <Link href="/library" className="group flex flex-col items-center gap-0.5 text-xs font-medium text-gray-600 hover:text-bamguet-dark transition-colors">
                     <LibraryBig className="w-5 h-5 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
                     <span className="hidden sm:block">图书馆</span>

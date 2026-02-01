@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { Calendar, ExternalLink } from 'lucide-react';
 
 // 添加数据定义，方便后续添加
@@ -93,10 +94,13 @@ export default function ActivitiesPage() {
                 <div className="bg-gradient-to-br from-bamguet-light to-white rounded-3xl p-6 sm:p-8 border border-bamguet/20 flex flex-col md:flex-row gap-10 items-center">
                     <div className="w-full md:w-1/4 aspect-square bg-white rounded-xl flex items-center justify-center text-bamguet-dark/30 font-bold text-xl overflow-hidden relative">
                         {/* 替换这里的 src 属性为您的实际图片路径，例如 /activities/poster_2026.jpg */}
-                        <img
+                        <Image
                             src="/activities/20260214.jpg"
                             alt="活动海报"
-                            className="w-full h-full object-cover"
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 768px) 100vw, 33vw"
+                            priority
                         />
                     </div>
                     <div className="flex-1 space-y-4 text-center md:text-left">
@@ -144,10 +148,12 @@ export default function ActivitiesPage() {
                         <div key={activity.id} className="group bg-white rounded-2xl p-5 border border-gray-100 hover:border-bamguet/30 transition-all flex gap-4">
                             <div className="w-24 h-24 sm:w-32 sm:h-32 bg-gray-100 rounded-lg flex-shrink-0 flex items-center justify-center text-xs text-gray-400 overflow-hidden relative">
                                 {activity.coverImage ? (
-                                    <img
+                                    <Image
                                         src={activity.coverImage}
                                         alt={activity.title}
-                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                        fill
+                                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                        sizes="(max-width: 640px) 96px, 128px"
                                     />
                                 ) : (
                                     activity.coverText
