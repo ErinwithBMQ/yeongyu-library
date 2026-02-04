@@ -32,7 +32,7 @@ export default function RegisterPage() {
             const { session } = await signUpWithInviteCode(email, password, inviteCode, username);
 
             if (!session) {
-                toast.success('注册申请已提交！请务必前往您的邮箱查看验证邮件，点击链接确认后即可登录。', { duration: 6000 });
+                toast.success('注册成功！现在可以登录啦！', { duration: 6000 });
                 router.push('/login');
             } else {
                 // If email confirmation is disabled or auto-confirmed
