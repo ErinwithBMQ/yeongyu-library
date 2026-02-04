@@ -247,7 +247,7 @@ export default function FavoritesPage() {
                                         const typeTag = work.tags?.find(t => t.category === '类型');
                                         return (
                                             <div key={work.id} className="group flex items-center justify-between p-3 rounded-lg border border-gray-200 bg-white hover:border-bamguet/50 transition-all">
-                                                <Link href={`/library/${work.id}`} className="flex-1 min-w-0 flex items-center gap-2 sm:gap-3">
+                                                <Link href={`/library/${work.id}`} prefetch={false} className="flex-1 min-w-0 flex items-center gap-2 sm:gap-3">
                                                     <span className="font-bold text-gray-700 truncate group-hover:text-bamguet-dark max-w-[5rem] sm:max-w-none">{work.title}</span>
                                                     <span className="px-2 py-0.5 rounded text-xs bg-gray-100 text-gray-500 font-medium whitespace-nowrap shrink-0">
                                                         {typeTag ? typeTag.name : work.platform}
