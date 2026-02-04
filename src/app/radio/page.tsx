@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { getRadioMessages, postRadioMessage, toggleReaction, getMessageReactions } from '@/services/radio';
+import { getRadioMessages, postRadioMessage, toggleReaction } from '@/services/radio';
 import { RadioMessage } from '@/types';
 import RadioMessageCard from '@/components/RadioMessageCard';
 import Pagination from '@/components/Pagination';

@@ -82,6 +82,7 @@ export default function RadioMessageCard({ message, onReact }: RadioMessageCardP
                 <div className="mt-2 text-right">
                     <Link
                         href={`/library/${message.linked_work.id}`}
+                        prefetch={false}
                         className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white/50 border border-bamguet/30 text-bamguet-dark hover:bg-bamguet hover:text-white rounded-full text-xs transition-colors duration-200"
                         title={message.linked_work.title}
                     >
