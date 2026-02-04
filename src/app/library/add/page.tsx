@@ -28,7 +28,7 @@ export default function AddWorkPage() {
         <div className="container mx-auto p-4 sm:p-8 min-h-screen">
             <header className="mb-8 max-w-4xl mx-auto">
                 <div className="mb-6">
-                    <Link href="/library" className="text-gray-400 hover:text-bamguet transition inline-flex items-center gap-1 text-sm">
+                    <Link href="/library" prefetch={false} className="text-gray-400 hover:text-bamguet transition inline-flex items-center gap-1 text-sm">
                         &larr; 返回图书馆
                     </Link>
                 </div>

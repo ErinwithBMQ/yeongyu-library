@@ -42,6 +42,7 @@ export default function LibraryPage() {
                     {user && (
                         <Link
                             href="/library/add"
+                            prefetch={false}
                             className="flex items-center justify-center w-[38px] h-[38px] bg-bamguet-dark text-white rounded-full hover:brightness-105 transition-all shadow-sm"
                             title="添加作品"
                         >

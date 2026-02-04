@@ -237,7 +237,7 @@ export default function FavoritesPage() {
                                 <div className="text-center py-16 text-gray-400">
                                     <p className="text-lg">这里空空如也</p>
                                     <p className="text-sm mt-2">快去图书馆添加喜欢的作品吧</p>
-                                    <Link href="/library" className="mt-6 inline-block px-6 py-2 bg-bamguet-light text-bamguet-dark rounded-xl hover:bg-bamguet transition">
+                                    <Link href="/library" prefetch={false} className="mt-6 inline-block px-6 py-2 bg-bamguet-light text-bamguet-dark rounded-xl hover:bg-bamguet transition">
                                         前往图书馆
                                     </Link>
                                 </div>

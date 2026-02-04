@@ -128,7 +128,7 @@ export default function RegisterPage() {
 
                 <div className="mt-6 text-center text-sm text-gray-500">
                     已有账号？{' '}
-                    <Link href="/login" className="text-bamguet-dark hover:underline">
+                    <Link href="/login" prefetch={false} className="text-bamguet-dark hover:underline">
                         直接登录
                     </Link>
                 </div>

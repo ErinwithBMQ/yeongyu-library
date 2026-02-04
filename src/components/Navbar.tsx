@@ -49,16 +49,16 @@ export default function Navbar() {
     return (
         <nav className={`flex items-center justify-between px-4 py-2 shadow bg-bamguet-light/80 backdrop-blur-sm sticky top-0 z-50 border-b border-bamguet-light transition-transform duration-300 ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}>
             <div className="text-xl font-bold text-bamguet-dark">
-                <Link href="/" className="flex items-center">
+                <Link href="/" prefetch={false} className="flex items-center">
                     <img src="/logo_2.png" alt="小章鱼存档地" className="h-10 w-auto object-contain" />
                 </Link>
             </div>
             <div className="flex gap-5 sm:gap-6 items-center">
-                <Link href="/library" className="group flex flex-col items-center gap-0.5 text-xs font-medium text-gray-600 hover:text-bamguet-dark transition-colors">
+                <Link href="/library" prefetch={false} className="group flex flex-col items-center gap-0.5 text-xs font-medium text-gray-600 hover:text-bamguet-dark transition-colors">
                     <LibraryBig className="w-5 h-5 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
                     <span className="hidden sm:block">图书馆</span>
                 </Link>
-                <Link href="/activities" className="group flex flex-col items-center gap-0.5 text-xs font-medium text-gray-600 hover:text-bamguet-dark transition-colors">
+                <Link href="/activities" prefetch={false} className="group flex flex-col items-center gap-0.5 text-xs font-medium text-gray-600 hover:text-bamguet-dark transition-colors">
                     <PartyPopper className="w-5 h-5 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
                     <span className="hidden sm:block">联产</span>
                 </Link>
@@ -68,22 +68,22 @@ export default function Navbar() {
                     <span className="text-gray-300 text-sm">...</span>
                 ) : user ? (
                     <>
-                        <Link href="/radio" className="group flex flex-col items-center gap-0.5 text-xs font-medium text-gray-600 hover:text-bamguet-dark transition-colors">
+                        <Link href="/radio" prefetch={false} className="group flex flex-col items-center gap-0.5 text-xs font-medium text-gray-600 hover:text-bamguet-dark transition-colors">
                             <Radio className="w-5 h-5 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
                             <span className="hidden sm:block">电台</span>
                         </Link>
-                        <Link href="/favorites" className="group flex flex-col items-center gap-0.5 text-xs font-medium text-gray-600 hover:text-bamguet-dark transition-colors">
+                        <Link href="/favorites" prefetch={false} className="group flex flex-col items-center gap-0.5 text-xs font-medium text-gray-600 hover:text-bamguet-dark transition-colors">
                             <Heart className="w-5 h-5 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
                             <span className="hidden sm:block">收藏夹</span>
                         </Link>
-                        <Link href="/me" className="group flex flex-col items-center gap-0.5 text-xs font-medium text-gray-600 hover:text-bamguet-dark transition-colors">
+                        <Link href="/me" prefetch={false} className="group flex flex-col items-center gap-0.5 text-xs font-medium text-gray-600 hover:text-bamguet-dark transition-colors">
                             <User className="w-5 h-5 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
                             <span className="hidden sm:block">我</span>
                         </Link>
                         {/* Optionally add a logout button here or keep it in "Me" page, asking for "Navbar" changes usually implies visibility of main links */}
                     </>
                 ) : (
-                    <Link href="/login" className="group flex flex-col items-center gap-0.5 text-xs font-medium text-gray-600 hover:text-bamguet-dark transition-colors">
+                    <Link href="/login" prefetch={false} className="group flex flex-col items-center gap-0.5 text-xs font-medium text-gray-600 hover:text-bamguet-dark transition-colors">
                         <LogIn className="w-6 h-6 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
                         <span className="hidden sm:block">登录</span>
                     </Link>

@@ -41,7 +41,7 @@ export default function EditWorkPage({ params }: { params: Promise<{ id: string 
         <div className="container mx-auto p-4 sm:p-8">
             <header className="mb-8 max-w-4xl mx-auto">
                 <div className="mb-6">
-                    <Link href={`/library/${id}`} className="text-gray-400 hover:text-bamguet transition inline-flex items-center gap-1 text-sm">
+                    <Link href={`/library/${id}`} prefetch={false} className="text-gray-400 hover:text-bamguet transition inline-flex items-center gap-1 text-sm">
                         &larr; 返回作品
                     </Link>
                 </div>

@@ -84,7 +84,7 @@ export default function LoginPage() {
 
                 <div className="mt-6 text-center text-sm text-gray-500">
                     还没有账号？{' '}
-                    <Link href="/register" className="text-bamguet-dark hover:underline">
+                    <Link href="/register" prefetch={false} className="text-bamguet-dark hover:underline">
                         注册账号
                     </Link>
                 </div>
