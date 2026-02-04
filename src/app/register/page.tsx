@@ -37,8 +37,7 @@ export default function RegisterPage() {
             } else {
                 // If email confirmation is disabled or auto-confirmed
                 toast.success('注册成功！');
-                router.push('/');
-                router.refresh();
+                router.push('/login');
             }
         } catch (err: any) {
             console.error(err);
