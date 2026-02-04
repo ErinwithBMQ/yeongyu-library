@@ -58,15 +58,16 @@ export default function Navbar() {
                     <LibraryBig className="w-5 h-5 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
                     <span className="hidden sm:block">图书馆</span>
                 </Link>
+                <Link href="/activities" className="group flex flex-col items-center gap-0.5 text-xs font-medium text-gray-600 hover:text-bamguet-dark transition-colors">
+                    <PartyPopper className="w-5 h-5 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
+                    <span className="hidden sm:block">联产</span>
+                </Link>
+
                 {loading ? (
                     // Optional: Skeleton loader or just empty
                     <span className="text-gray-300 text-sm">...</span>
                 ) : user ? (
                     <>
-                        <Link href="/activities" className="group flex flex-col items-center gap-0.5 text-xs font-medium text-gray-600 hover:text-bamguet-dark transition-colors">
-                            <PartyPopper className="w-5 h-5 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
-                            <span className="hidden sm:block">联产</span>
-                        </Link>
                         <Link href="/radio" className="group flex flex-col items-center gap-0.5 text-xs font-medium text-gray-600 hover:text-bamguet-dark transition-colors">
                             <Radio className="w-5 h-5 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
                             <span className="hidden sm:block">电台</span>

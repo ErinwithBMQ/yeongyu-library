@@ -8,15 +8,16 @@ export async function middleware(request: NextRequest) {
 export const config = {
     matcher: [
         /*
-         * Match all request paths except for the ones starting with:
-         * - api (API routes)
-         * - _next/static (static files)
-         * - _next/image (image optimization files)
-         * - favicon.ico (favicon file)
-         * - images - .svg, .png, .jpg, .jpeg, .gif, .webp
-         * - PWA files - sw.js, workbox-*.js, manifest.webmanifest
-         * Feel free to modify this pattern to include more paths.
+         * Match only protected routes to save resources.
+         * Public routes (/, /library, /activities, /login, etc.) will bypass middleware.
+         * - /me, /favorites, /radio: Require authentication
+         * - /library/add: Requires authentication
+         * - /library/:id/edit: Requires authentication
          */
-        '/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|js|css|map|json|webmanifest)$).*)',
+        '/me/:path*',
+        '/favorites/:path*',
+        '/radio/:path*',
+        '/library/add',
+        '/library/:path*/edit',
     ],
 };
