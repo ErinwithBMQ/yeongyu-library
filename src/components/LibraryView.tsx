@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect, useCallback } from 'react';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { getWorks, getRandomWorkId } from '@/services/works';
 import { getTagsGroupedByCategory } from '@/services/tags';
 import { WorkWithTags, Tag } from '@/types';
@@ -15,30 +15,51 @@ interface LibraryViewProps {
 
 export default function LibraryView({ sortOrder = 'newest' }: LibraryViewProps) {
     const router = useRouter();
-    // const [works, setWorks] = useState<WorkWithTags[]>([]);
-    // const [loading, setLoading] = useState(true);
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+
+    // URL State Derivation
+    const page = Number(searchParams.get('page')) || 1;
+    const appliedQuery = searchParams.get('q') || '';
+    const selectedTagIdsRaw = searchParams.get('tags');
+    const selectedTagIds = selectedTagIdsRaw ? selectedTagIdsRaw.split(',').map(Number) : [];
+
     const [groupedTags, setGroupedTags] = useState<Record<string, Tag[]>>({});
 
-    // Filter States
-    const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
-    const [page, setPage] = useState(1);
-    // const [total, setTotal] = useState(0);
+    // Local UI State
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-    // Search States
-    const [isSearchMode, setIsSearchMode] = useState(false);
-    const [searchInputValue, setSearchInputValue] = useState('');
-    const [appliedQuery, setAppliedQuery] = useState('');
+    const [isSearchMode, setIsSearchMode] = useState(!!appliedQuery);
+    const [searchInputValue, setSearchInputValue] = useState(appliedQuery);
 
     const pageSize = 9; // 一页显示几个
 
     // 与 AddWorkForm.tsx 保持一致的顺序
     const categoryOrder = ['类型', '世界观', '篇幅', '进度', '预警', '情感', '背景', '剧情', '人设', '特殊设定', '幻想设定'];
 
-    // Load Tags on mount (Tags change rarely, so standard fetch is fine, or could use SWR with high revalidate time)
+    // Load Tags on mount
     useEffect(() => {
         getTagsGroupedByCategory().then(setGroupedTags);
     }, []);
+
+    // Sync search input with URL query when URL changes externally (e.g. back button)
+    useEffect(() => {
+        setSearchInputValue(appliedQuery);
+        if (appliedQuery) setIsSearchMode(true);
+    }, [appliedQuery]);
+
+    // Helper to update URL
+    const updateURL = useCallback((updates: Record<string, string | number | null>) => {
+        const params = new URLSearchParams(searchParams.toString());
+        Object.entries(updates).forEach(([key, value]) => {
+            if (value === null || value === undefined || value === '') {
+                params.delete(key);
+            } else {
+                params.set(key, String(value));
+            }
+        });
+        router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    }, [searchParams, pathname, router]);
+
 
     // SWR Fetcher for Works
     const worksKey = {
@@ -53,20 +74,14 @@ export default function LibraryView({ sortOrder = 'newest' }: LibraryViewProps) 
     const { data: worksData, isLoading: loading } = useSWR(worksKey, async (params) => {
         return await getWorks(params);
     }, {
-        keepPreviousData: true, // 核心：保留旧数据直到新数据加载完成
-        revalidateOnFocus: false, // 避免切窗口时频繁刷新
+        keepPreviousData: true,
+        revalidateOnFocus: false,
     });
 
     const works = worksData?.data || [];
     const total = worksData?.total || 0;
 
-    /* Removed manual fetchWorks and useEffect */
-
-
     const handleRandomWork = async () => {
-        // Show a simple loading approach or just navigate
-        // Ideally we might want a separate loading state or reuse global loading but reusing global loading might flash the list.
-        // Let's just do it.
         try {
             const id = await getRandomWorkId({
                 searchQuery: appliedQuery,
@@ -83,23 +98,28 @@ export default function LibraryView({ sortOrder = 'newest' }: LibraryViewProps) 
     };
 
     const handleTagClick = (id: number) => {
-        setSelectedTagIds(prev => {
-            if (prev.includes(id)) {
-                return prev.filter(tid => tid !== id);
-            } else {
-                return [...prev, id];
-            }
+        const currentTags = new Set(selectedTagIds);
+        if (currentTags.has(id)) {
+            currentTags.delete(id);
+        } else {
+            currentTags.add(id);
+        }
+
+        const tagsString = Array.from(currentTags).join(',');
+        updateURL({
+            tags: tagsString || null,
+            page: 1
         });
-        setPage(1); // Reset to page 1 whenever filter changes
     };
 
     const handleSearch = () => {
         if (searchInputValue.trim() !== appliedQuery) {
-            setAppliedQuery(searchInputValue.trim());
-            setPage(1);
+            updateURL({
+                q: searchInputValue.trim(),
+                page: 1
+            });
         }
     };
-
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             handleSearch();
@@ -108,8 +128,16 @@ export default function LibraryView({ sortOrder = 'newest' }: LibraryViewProps) 
 
     const clearSearch = () => {
         setSearchInputValue('');
-        setAppliedQuery('');
+        updateURL({ q: null, page: 1 });
         setIsSearchMode(false);
+    };
+
+    const handleClearTags = () => {
+        updateURL({ tags: null, page: 1 });
+    }
+
+    const handlePageChange = (newPage: number) => {
+        updateURL({ page: newPage });
     };
 
     const totalPages = Math.ceil(total / pageSize);
@@ -150,7 +178,7 @@ export default function LibraryView({ sortOrder = 'newest' }: LibraryViewProps) 
 
                         {isSidebarOpen && selectedTagIds.length > 0 && (
                             <button
-                                onClick={() => setSelectedTagIds([])}
+                                onClick={handleClearTags}
                                 className="text-xs text-bamguet-dark hover:underline"
                             >
                                 清除
@@ -300,7 +328,7 @@ export default function LibraryView({ sortOrder = 'newest' }: LibraryViewProps) 
                         {(selectedTagIds.length > 0 || appliedQuery) && (
                             <button
                                 onClick={() => {
-                                    setSelectedTagIds([]);
+                                    handleClearTags();
                                     clearSearch();
                                 }}
                                 className="mt-2 text-bamguet-dark hover:underline"
@@ -365,7 +393,7 @@ export default function LibraryView({ sortOrder = 'newest' }: LibraryViewProps) 
                     currentPage={page}
                     totalCount={total}
                     pageSize={pageSize}
-                    onPageChange={setPage}
+                    onPageChange={handlePageChange}
                 />
 
             </main>

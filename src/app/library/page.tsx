@@ -1,16 +1,31 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useCallback } from 'react';
 import Link from 'next/link';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import LibraryView from "@/components/LibraryView";
 import { useAuth } from '@/context/AuthContext';
 
-export default function LibraryPage() {
+function LibraryPageContent() {
     const { user } = useAuth();
-    const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
+    const router = useRouter();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+
+    const sortOrder = (searchParams.get('sort') as 'newest' | 'oldest') || 'newest';
+
+    const createQueryString = useCallback(
+        (name: string, value: string) => {
+            const params = new URLSearchParams(searchParams.toString())
+            params.set(name, value)
+            return params.toString()
+        },
+        [searchParams]
+    )
 
     const toggleSort = () => {
-        setSortOrder(prev => prev === 'newest' ? 'oldest' : 'newest');
+        const newSort = sortOrder === 'newest' ? 'oldest' : 'newest';
+        router.replace(`${pathname}?${createQueryString('sort', newSort)}`, { scroll: false });
     };
 
     return (
@@ -54,5 +69,13 @@ export default function LibraryPage() {
 
             <LibraryView sortOrder={sortOrder} />
         </div>
+    );
+}
+
+export default function LibraryPage() {
+    return (
+        <Suspense fallback={<div className="container mx-auto p-4 sm:p-8">Loading...</div>}>
+            <LibraryPageContent />
+        </Suspense>
     );
 }

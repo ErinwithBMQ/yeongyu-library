@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import { AuthProvider } from "@/context/AuthContext";
 import { Toaster } from "sonner";
 import { createClient } from "@/utils/supabase/server";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -51,6 +52,7 @@ export default async function RootLayout({
             {children}
           </main>
           <Toaster position="top-center" richColors />
+          <SpeedInsights />
         </AuthProvider>
       </body>
     </html>

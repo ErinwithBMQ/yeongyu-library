@@ -69,9 +69,12 @@ export default function WorkDetailPage({ params }: { params: Promise<{ id: strin
         <div className="container mx-auto p-4 sm:p-8 max-w-6xl">
             {/* 顶部导航 */}
             <div className="mb-8">
-                <Link href="/library" prefetch={false} className="text-gray-400 hover:text-bamguet transition inline-flex items-center gap-1 text-sm">
+                <button
+                    onClick={() => router.back()}
+                    className="text-gray-400 hover:text-bamguet transition inline-flex items-center gap-1 text-sm"
+                >
                     &larr; 返回图书馆
-                </Link>
+                </button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-16">
