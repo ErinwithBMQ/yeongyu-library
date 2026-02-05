@@ -86,7 +86,7 @@ export default function AddWorkForm({ initialData, isEditMode = false }: AddWork
                     tag_ids: selectedTagIds
                 });
                 toast.success('作品更新成功！');
-                router.push(`/library/${initialData.id}`);
+                router.back();
             } else {
                 // 创建模式 create
                 await createWork({
@@ -100,7 +100,7 @@ export default function AddWorkForm({ initialData, isEditMode = false }: AddWork
                 toast.success('作品添加成功！');
                 router.push('/library');
             }
-            router.refresh();
+            // router.refresh(); // Removed to prevent conflicts with router.back() history
         } catch (error: any) {
             console.error('提交失败', error);
             let msg = error.message || '未知错误';

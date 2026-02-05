@@ -1,25 +1,27 @@
 'use client';
 
-import { useState, useEffect, use } from 'react';
+import { Suspense, useState, useEffect, use } from 'react';
 import { getWorkById, deleteWork } from '@/services/works';
 import { checkWorkInFolders } from '@/services/favorites';
 import { WorkWithTags } from '@/types';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import AddToFavoriteModal from '@/components/AddToFavoriteModal';
 import { toast } from 'sonner';
 import { showConfirm } from '@/lib/confirm';
 
-export default function WorkDetailPage({ params }: { params: Promise<{ id: string }> }) {
-    // Unwrapping params using React.use()
-    const { id } = use(params);
+function WorkDetailContent({ id }: { id: string }) {
     const { user } = useAuth();
     const router = useRouter();
     const [work, setWork] = useState<WorkWithTags | null>(null);
     const [loading, setLoading] = useState(true);
     const [isFavoriteModalOpen, setIsFavoriteModalOpen] = useState(false);
     const [isFavorited, setIsFavorited] = useState(false);
+
+    const searchParams = useSearchParams();
+    const fromParams = searchParams.get('from');
+    const backLink = fromParams ? `/library?${decodeURIComponent(fromParams)}` : '/library';
 
     useEffect(() => {
         const fetchWork = async () => {
@@ -69,12 +71,12 @@ export default function WorkDetailPage({ params }: { params: Promise<{ id: strin
         <div className="container mx-auto p-4 sm:p-8 max-w-6xl">
             {/* 顶部导航 */}
             <div className="mb-8">
-                <button
-                    onClick={() => router.back()}
+                <Link
+                    href={backLink}
                     className="text-gray-400 hover:text-bamguet transition inline-flex items-center gap-1 text-sm"
                 >
                     &larr; 返回图书馆
-                </button>
+                </Link>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-16">
@@ -180,5 +182,15 @@ export default function WorkDetailPage({ params }: { params: Promise<{ id: strin
                 />
             )}
         </div>
+    );
+}
+
+export default function WorkDetailPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = use(params);
+
+    return (
+        <Suspense fallback={<div className="p-10 text-center text-gray-500">加载中...</div>}>
+            <WorkDetailContent id={id} />
+        </Suspense>
     );
 }

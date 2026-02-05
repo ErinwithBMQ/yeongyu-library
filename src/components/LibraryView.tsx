@@ -362,7 +362,12 @@ export default function LibraryView({ sortOrder = 'newest' }: LibraryViewProps) 
                                     </div>
 
                                     <h3 className="font-bold text-gray-800 text-lg mb-1 group-hover:text-bamguet-dark transition-colors line-clamp-1">
-                                        <Link href={`/library/${work.id}`} prefetch={false}>{work.title}</Link>
+                                        <Link
+                                            href={`/library/${work.id}?from=${encodeURIComponent(searchParams.toString())}`}
+                                            prefetch={false}
+                                        >
+                                            {work.title}
+                                        </Link>
                                     </h3>
                                     <div className="text-sm text-gray-500 mb-3">作者：{work.author_name}</div>
 
