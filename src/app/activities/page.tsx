@@ -111,7 +111,10 @@ export default function ActivitiesPage() {
                             玫瑰花礼 准奎情人节联产
                         </h3>
                         <p className="text-gray-600 leading-relaxed">
-                            “这一次，我想送你不一样的玫瑰。” coming soon...
+                            “我对你产生意义了吗？”
+                            就像这些花儿，她们都是独一无二的。
+                            “当然，你是我独一无二的玫瑰。”
+                            愿这份情人节的玫瑰花礼，也能够对你产生意义。
                         </p>
 
                         <div className="flex flex-wrap gap-4 justify-center md:justify-start pt-2">
@@ -123,7 +126,7 @@ export default function ActivitiesPage() {
 
                         <div className="pt-4">
                             <a
-                                href="https://weibo.com/7615272159/QpH849f6N"
+                                href="https://weibo.com/7615272159/QrQokpvic"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="inline-flex items-center gap-2 px-6 py-3 bg-bamguet-dark text-white rounded-xl hover:brightness-110 transition-all font-medium"

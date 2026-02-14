@@ -48,6 +48,7 @@ export default function Home() {
           <div className="text-gray-600 space-y-2 min-h-[100px] bg-gray-50/50 p-4 rounded-xl border border-dashed border-gray-200">
             <p className="text-sm text-gray-400">
               2026.2.4 - 网站正式上线！欢迎小章鱼们注册使用~
+              2026.2.14 - 更新了重置密码功能
             </p>
           </div>
         </div>
