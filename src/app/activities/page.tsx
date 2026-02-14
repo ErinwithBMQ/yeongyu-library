@@ -112,8 +112,11 @@ export default function ActivitiesPage() {
                         </h3>
                         <p className="text-gray-600 leading-relaxed">
                             “我对你产生意义了吗？”
+                            <br />
                             就像这些花儿，她们都是独一无二的。
+                            <br />
                             “当然，你是我独一无二的玫瑰。”
+                            <br />
                             愿这份情人节的玫瑰花礼，也能够对你产生意义。
                         </p>
 
