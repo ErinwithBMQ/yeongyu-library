@@ -1,17 +1,31 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { Suspense, useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { signIn } from '@/services/auth';
 import { toast } from 'sonner';
 
-export default function LoginPage() {
+function LoginContent() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
+    const searchParams = useSearchParams();
+
+    useEffect(() => {
+        const errorParam = searchParams.get('error');
+        if (errorParam) {
+            if (errorParam === 'auth-code-error') {
+                setError('链接已失效或验证失败，请重新尝试');
+            } else if (errorParam.includes('expired')) {
+                setError('链接已过期，请重新申请');
+            } else {
+                setError(decodeURIComponent(errorParam));
+            }
+        }
+    }, [searchParams]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -71,6 +85,11 @@ export default function LoginPage() {
                             className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-bamguet focus:border-transparent"
                             placeholder="••••••••"
                         />
+                        <div className="text-right mt-1">
+                            <Link href="/forgot-password" className="text-xs text-gray-500 hover:text-bamguet-dark">
+                                忘记密码？
+                            </Link>
+                        </div>
                     </div>
 
                     <button
@@ -90,5 +109,13 @@ export default function LoginPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function LoginPage() {
+    return (
+        <Suspense fallback={<div className="min-h-[80vh] flex items-center justify-center">Loading...</div>}>
+            <LoginContent />
+        </Suspense>
     );
 }

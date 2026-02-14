@@ -79,3 +79,22 @@ export const updatePassword = async (password: string) => {
     if (error) throw error;
     return data;
 };
+
+/**
+ * 发送重置密码邮件
+ */
+export const sendPasswordResetEmail = async (email: string) => {
+    // Redirect to callback which handles the code exchange and redirects to reset-password page
+    const redirectTo = typeof window !== 'undefined'
+        ? `${window.location.origin}/auth/callback?next=/reset-password`
+        : undefined;
+
+    const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo,
+    });
+
+    if (error) throw error;
+    return data;
+};
+
+
