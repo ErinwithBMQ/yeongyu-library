@@ -19,6 +19,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "小章鱼存档地",
   description: "产出整理站 + 匿名树洞",
+  icons: {
+    icon: "/octopus.png",
+    shortcut: "/octopus.png",
+    apple: "/octopus.png",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
