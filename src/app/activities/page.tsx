@@ -16,6 +16,15 @@ interface PastActivity {
 // 在这里维护往期活动列表
 const PAST_ACTIVITIES: PastActivity[] = [
     {
+        id: '0',
+        title: '玫瑰花礼 准奎情人节联产',
+        description: '“我对你产生意义了吗？”就像这些花儿，她们都是独一无二的。“当然，你是我独一无二的玫瑰。”愿这份情人节的玫瑰花礼，也能够对你产生意义。',
+        date: '2026.02.14',
+        link: 'https://weibo.com/7615272159/QrQokpvic',
+        coverText: '封面图',
+        coverImage: '/activities/20260214.jpg'
+    },
+    {
         id: '1',
         title: 'TheUnsolvableProposition 准奎12h联产',
         description: '“长长的红线把我们捆绑在一起，从此无论何时，我的终点都是你。”',
@@ -95,7 +104,7 @@ export default function ActivitiesPage() {
                     <div className="w-full md:w-1/4 aspect-square bg-white rounded-xl flex items-center justify-center text-bamguet-dark/30 font-bold text-xl overflow-hidden relative">
                         {/* 替换这里的 src 属性为您的实际图片路径，例如 /activities/poster_2026.jpg */}
                         <Image
-                            src="/activities/20260214.jpg"
+                            src="/activities/20260314.png"
                             alt="活动海报"
                             fill
                             className="object-cover"
@@ -105,31 +114,31 @@ export default function ActivitiesPage() {
                     </div>
                     <div className="flex-1 space-y-4 text-center md:text-left">
                         <div className="inline-block px-3 py-1 rounded-full bg-bamguet text-white text-sm font-medium">
-                            2026 情人节
+                            2026 白色情人节
                         </div>
                         <h3 className="text-2xl font-bold text-gray-800">
-                            玫瑰花礼 准奎情人节联产
+                            春日浪漫 准奎0314联产活动
                         </h3>
                         <p className="text-gray-600 leading-relaxed">
-                            “我对你产生意义了吗？”
+                            叮！您的三月专属盲盒已送达📦内含限定浪漫，邀请您速来解锁！！！✨
                             <br />
-                            就像这些花儿，她们都是独一无二的。
+                            拆盲盒时间：2026.03.14白色情人节
                             <br />
-                            “当然，你是我独一无二的玫瑰。”
+                            春日、樱花，还有你💕
                             <br />
-                            愿这份情人节的玫瑰花礼，也能够对你产生意义。
+                            Coming soon…
                         </p>
 
                         <div className="flex flex-wrap gap-4 justify-center md:justify-start pt-2">
                             <div className="flex items-center gap-2 text-gray-500 text-sm">
                                 <Calendar className="w-4 h-4" />
-                                <span>2026.02.14</span>
+                                <span>2026.03.14</span>
                             </div>
                         </div>
 
                         <div className="pt-4">
                             <a
-                                href="https://weibo.com/7615272159/QrQokpvic"
+                                href="https://weibo.com/6636494064/QsJM9qy4L"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="inline-flex items-center gap-2 px-6 py-3 bg-bamguet-dark text-white rounded-xl hover:brightness-110 transition-all font-medium"
