@@ -120,13 +120,9 @@ export default function ActivitiesPage() {
                             春日浪漫 准奎0314联产活动
                         </h3>
                         <p className="text-gray-600 leading-relaxed">
-                            叮！您的三月专属盲盒已送达📦内含限定浪漫，邀请您速来解锁！！！✨
+                            春日、樱花，还有我们💞
                             <br />
-                            拆盲盒时间：2026.03.14白色情人节
-                            <br />
-                            春日、樱花，还有你💕
-                            <br />
-                            Coming soon…
+                            —— 本次春日列车之旅，感谢你的同行。
                         </p>
 
                         <div className="flex flex-wrap gap-4 justify-center md:justify-start pt-2">
@@ -138,7 +134,7 @@ export default function ActivitiesPage() {
 
                         <div className="pt-4">
                             <a
-                                href="https://weibo.com/6636494064/QsJM9qy4L"
+                                href="https://weibo.com/6636494064/QwcififW5"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="inline-flex items-center gap-2 px-6 py-3 bg-bamguet-dark text-white rounded-xl hover:brightness-110 transition-all font-medium"
