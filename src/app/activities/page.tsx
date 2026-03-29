@@ -16,6 +16,15 @@ interface PastActivity {
 // 在这里维护往期活动列表
 const PAST_ACTIVITIES: PastActivity[] = [
     {
+        id: '20260314',
+        title: '春日浪漫 准奎0314联产活动',
+        description: '春日、樱花，还有我们💞 —— 本次春日列车之旅，感谢你的同行。',
+        date: '2026.03.14',
+        link: 'https://weibo.com/6636494064/QwcififW5',
+        coverText: '封面图',
+        coverImage: '/activities/20260314.png'
+    },
+    {
         id: '0',
         title: '玫瑰花礼 准奎情人节联产',
         description: '“我对你产生意义了吗？”就像这些花儿，她们都是独一无二的。“当然，你是我独一无二的玫瑰。”愿这份情人节的玫瑰花礼，也能够对你产生意义。',
@@ -95,16 +104,15 @@ export default function ActivitiesPage() {
                 </div>
 
                 {/* 如果没有活动，可以显示这个 */}
-                {/* <div className="p-8 text-center bg-gray-50 rounded-2xl border border-gray-100 text-gray-500">
+                <div className="p-8 text-center bg-gray-50 rounded-2xl border border-gray-100 text-gray-500">
                     目前暂时没有正在进行的联产活动哦，去看看往期回顾吧~
-                </div> */}
+                </div>
 
-                {/* 活动卡片示例 */}
+                {/* 活动卡片示例 (注释掉，后续有新活动可直接解除注释使用)
                 <div className="bg-gradient-to-br from-bamguet-light to-white rounded-3xl p-6 sm:p-8 border border-bamguet/20 flex flex-col md:flex-row gap-10 items-center">
                     <div className="w-full md:w-1/4 aspect-square bg-white rounded-xl flex items-center justify-center text-bamguet-dark/30 font-bold text-xl overflow-hidden relative">
-                        {/* 替换这里的 src 属性为您的实际图片路径，例如 /activities/poster_2026.jpg */}
                         <Image
-                            src="/activities/20260314.png"
+                            src="/activities/替换为你的海报.png"
                             alt="活动海报"
                             fill
                             className="object-cover"
@@ -114,27 +122,25 @@ export default function ActivitiesPage() {
                     </div>
                     <div className="flex-1 space-y-4 text-center md:text-left">
                         <div className="inline-block px-3 py-1 rounded-full bg-bamguet text-white text-sm font-medium">
-                            2026 白色情人节
+                            活动标签
                         </div>
                         <h3 className="text-2xl font-bold text-gray-800">
-                            春日浪漫 准奎0314联产活动
+                            这里填写活动名称
                         </h3>
                         <p className="text-gray-600 leading-relaxed">
-                            春日、樱花，还有我们💞
-                            <br />
-                            —— 本次春日列车之旅，感谢你的同行。
+                            这里填写活动文案...
                         </p>
 
                         <div className="flex flex-wrap gap-4 justify-center md:justify-start pt-2">
                             <div className="flex items-center gap-2 text-gray-500 text-sm">
                                 <Calendar className="w-4 h-4" />
-                                <span>2026.03.14</span>
+                                <span>202x.xx.xx</span>
                             </div>
                         </div>
 
                         <div className="pt-4">
                             <a
-                                href="https://weibo.com/6636494064/QwcififW5"
+                                href="#"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="inline-flex items-center gap-2 px-6 py-3 bg-bamguet-dark text-white rounded-xl hover:brightness-110 transition-all font-medium"
@@ -145,6 +151,7 @@ export default function ActivitiesPage() {
                         </div>
                     </div>
                 </div>
+                */}
             </section>
 
             {/* 往期回顾 */}
