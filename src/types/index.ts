@@ -73,10 +73,31 @@ export interface FavoriteFolder {
 }
 
 /**
- * 对应数据库中的 public.folder_entries 表
+ * 对应数据库中的 public.quiz_questions 表（不含正确答案）
  */
-export interface FolderEntry {
-    folder_id: number;
-    work_id: number;
-    created_at: string;
+export interface QuizQuestion {
+    id: number;
+    question: string;
+    option_a: string;
+    option_b: string;
+    option_c: string;
+    option_d: string;
+}
+
+/**
+ * 单道题的作答
+ */
+export interface QuizAnswer {
+    id: number;
+    answer: string; // 'a' | 'b' | 'c' | 'd'
+}
+
+/**
+ * 答题结果
+ */
+export interface QuizResult {
+    passed: boolean;
+    score: number;
+    correct: number;
+    total: number;
 }

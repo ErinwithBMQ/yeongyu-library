@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { signUpWithInviteCode } from '@/services/auth';
+import { signUp } from '@/services/auth';
 import { toast } from 'sonner';
 
 export default function RegisterPage() {
@@ -11,7 +11,6 @@ export default function RegisterPage() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [inviteCode, setInviteCode] = useState('');
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -29,19 +28,18 @@ export default function RegisterPage() {
         }
 
         try {
-            const { session } = await signUpWithInviteCode(email, password, inviteCode, username);
+            const { session } = await signUp(email, password, username);
 
             if (!session) {
                 toast.success('注册成功！现在可以登录啦！', { duration: 6000 });
                 router.push('/login');
             } else {
-                // If email confirmation is disabled or auto-confirmed
                 toast.success('注册成功！');
                 router.push('/login');
             }
         } catch (err: any) {
             console.error(err);
-            setError(err.message || '注册失败，请检查邀请码或其他信息');
+            setError(err.message || '注册失败，请确认邮箱已通过糖点测试');
         } finally {
             setLoading(false);
         }
@@ -50,7 +48,9 @@ export default function RegisterPage() {
     return (
         <div className="min-h-[80vh] flex items-center justify-center p-4">
             <div className="bg-white p-8 rounded-2xl border border-gray-200 w-full max-w-md">
-                <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">加入小章鱼存档地</h1>
+                <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">
+                    加入小章鱼存档地
+                </h1>
 
                 {error && (
                     <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm">
@@ -60,7 +60,9 @@ export default function RegisterPage() {
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">邮箱</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                            邮箱
+                        </label>
                         <input
                             type="email"
                             required
@@ -69,10 +71,14 @@ export default function RegisterPage() {
                             className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-bamguet focus:border-transparent"
                             placeholder="your@email.com"
                         />
-                        <p className="text-xs text-gray-400 mt-1">需与申请邀请码时填写的邮箱一致</p>
+                        <p className="text-xs text-gray-400 mt-1">
+                            需使用通过糖点测试的邮箱
+                        </p>
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">用户名</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                            用户名
+                        </label>
                         <input
                             type="text"
                             required
@@ -83,37 +89,30 @@ export default function RegisterPage() {
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">密码</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                            密码
+                        </label>
                         <input
                             type="password"
                             required
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-bamguet focus:border-transparent"
-                            placeholder="••••••••"
+                            placeholder="至少6位"
                             minLength={6}
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">确认密码</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                            确认密码
+                        </label>
                         <input
                             type="password"
                             required
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-bamguet focus:border-transparent"
-                            placeholder="••••••••"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">邀请码</label>
-                        <input
-                            type="text"
-                            required
-                            value={inviteCode}
-                            onChange={(e) => setInviteCode(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-bamguet focus:border-transparent font-mono"
-                            placeholder="粘贴您的邀请码"
+                            placeholder="再次输入密码"
                         />
                     </div>
 
@@ -126,9 +125,24 @@ export default function RegisterPage() {
                     </button>
                 </form>
 
-                <div className="mt-6 text-center text-sm text-gray-500">
+                <div className="mt-4 text-center text-sm text-gray-500">
+                    还没有通过糖点测试？{' '}
+                    <Link
+                        href="/quiz"
+                        prefetch={false}
+                        className="text-bamguet-dark hover:underline"
+                    >
+                        先去答题 →
+                    </Link>
+                </div>
+
+                <div className="mt-2 text-center text-sm text-gray-500">
                     已有账号？{' '}
-                    <Link href="/login" prefetch={false} className="text-bamguet-dark hover:underline">
+                    <Link
+                        href="/login"
+                        prefetch={false}
+                        className="text-bamguet-dark hover:underline"
+                    >
                         直接登录
                     </Link>
                 </div>

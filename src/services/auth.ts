@@ -2,18 +2,16 @@ import { supabase } from '@/lib/supabaseClient';
 import { fetchApi } from '@/lib/apiClient';
 
 /**
- * 用户注册接口 (带邀请码校验)
- * 这是一个组合操作：先查邀请码，再注册，最后更新邀请码状态
+ * 用户注册（通过糖点测试后使用已验证邮箱注册）
  */
-export const signUpWithInviteCode = async (
+export const signUp = async (
     email: string,
     password: string,
-    code: string,
     username: string
 ) => {
     return fetchApi<any>('/auth/signup', {
         method: 'POST',
-        body: JSON.stringify({ email, password, code, username })
+        body: JSON.stringify({ email, password, username }),
     });
 };
 
@@ -84,7 +82,6 @@ export const updatePassword = async (password: string) => {
  * 发送重置密码邮件
  */
 export const sendPasswordResetEmail = async (email: string) => {
-    // Redirect to callback which handles the code exchange and redirects to reset-password page
     const redirectTo = typeof window !== 'undefined'
         ? `${window.location.origin}/auth/callback?next=/reset-password`
         : undefined;
@@ -96,5 +93,3 @@ export const sendPasswordResetEmail = async (email: string) => {
     if (error) throw error;
     return data;
 };
-
-
