@@ -29,7 +29,7 @@ export default function Home() {
           <div className="text-gray-600 space-y-2 min-h-[100px] bg-gray-50/50 p-4 rounded-xl border border-dashed border-gray-200">
             <p className="text-sm text-gray-400">本站是专属于韩国男团 TOMORROW X TOGETHER cp 准奎（崔然竣×崔杋圭）的产出整理站。
               <br />
-              本站禁拆逆、禁引战，采用邀请码制注册。未登录的用户仅可浏览图书馆页面，使用部分功能。
+              本站禁拆逆、禁引战，需通过糖点问答后才可注册。未登录的用户仅可浏览图书馆页面，使用部分功能。
               <br />
               若有违反本站规定的行为，管理员有权删除相关内容并封禁账号。
               <br />
@@ -50,6 +50,8 @@ export default function Home() {
               2026.2.4 - 网站正式上线！欢迎小章鱼们注册使用~
               <br />
               2026.2.14 - 更新了重置密码功能
+              <br />
+              2026.8.26 - 冬信收纳局活动上线，欢迎大家积极参与！
             </p>
           </div>
         </div>
