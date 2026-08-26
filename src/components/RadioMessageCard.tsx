@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { RadioMessage } from '@/types';
 import Link from 'next/link';
+import { Snowflake } from 'lucide-react';
 
 interface RadioMessageCardProps {
     message: RadioMessage & {
@@ -36,7 +37,9 @@ export default function RadioMessageCard({ message, onReact }: RadioMessageCardP
 
     return (
         <div
-            className={`relative ${isShort
+            className={`relative ${message.is_winter_letter_storage_participant
+                ? 'bg-sky-50 border-sky-200'
+                : isShort
                 ? 'bg-sakura-light border-sakura'
                 : 'bg-hwangchoon-light border-hwangchoon'
                 } border rounded-lg p-4 transition-all`}
@@ -155,6 +158,18 @@ export default function RadioMessageCard({ message, onReact }: RadioMessageCardP
                     )}
                 </div>
             </div>
+
+            {message.is_winter_letter_storage_participant && (
+                <div className="mt-3 flex justify-end">
+                    <span
+                        className="inline-flex items-center gap-1 border border-sky-200 bg-sky-100/70 px-2 py-1 text-[11px] text-sky-700"
+                        title="冬信收纳局活动留言"
+                    >
+                        <Snowflake className="h-3 w-3" aria-hidden="true" />
+                        冬信收纳局
+                    </span>
+                </div>
+            )}
         </div>
     );
 }

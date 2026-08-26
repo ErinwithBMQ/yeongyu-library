@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerSupabaseClient } from '@/lib/supabaseServer';
 
+const WINTER_LETTER_STORAGE_ACTIVITY_KEY = 'winter-letter-storage';
+
 export async function GET(request: NextRequest) {
     try {
         const searchParams = request.nextUrl.searchParams;
@@ -33,6 +35,9 @@ export async function GET(request: NextRequest) {
         radio_reactions (
             user_id,
             emoji
+        ),
+        radio_activity_participations (
+            activity_key
         )
       `, { count: 'exact' })
             .order('created_at', { ascending: false })
@@ -62,9 +67,13 @@ export async function GET(request: NextRequest) {
             }));
 
             // Remove raw radio_reactions and return clean object
-            const { radio_reactions, ...rest } = msg;
+            const isWinterLetterStorageParticipant = msg.radio_activity_participations?.some(
+                (participation: { activity_key: string }) => participation.activity_key === WINTER_LETTER_STORAGE_ACTIVITY_KEY
+            ) || false;
+            const { radio_reactions, radio_activity_participations, ...rest } = msg;
             return {
                 ...rest,
+                is_winter_letter_storage_participant: isWinterLetterStorageParticipant,
                 reactions
             };
         });
@@ -90,18 +99,14 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const { nickname, content, linked_work_id } = body;
+        const { nickname, content, linked_work_id, participate_in_winter_letter_storage } = body;
 
-        let query = supabase.from('radio_messages').insert({
-            user_id: user.id,
-            nickname,
-            content,
-            linked_work_id
+        const { error } = await supabase.rpc('create_radio_message', {
+            p_nickname: nickname,
+            p_content: content,
+            p_linked_work_id: linked_work_id ?? null,
+            p_participate_in_winter_letter_storage: participate_in_winter_letter_storage === true
         });
-
-        // If we want to return the inserted data
-        // .select()
-        const { error } = await query;
         if (error) throw error;
 
         return NextResponse.json({ success: true });

@@ -48,6 +48,7 @@ export interface RadioMessage {
     nickname: string;
     content: string;
     linked_work_id: number | null;
+    is_winter_letter_storage_participant: boolean;
     created_at: string;
 }
 

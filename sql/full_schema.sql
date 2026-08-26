@@ -102,6 +102,14 @@ create table public.radio_reactions (
   unique (message_id, user_id, emoji)
 );
 
+-- 2.10 电台临时活动报名表
+create table public.radio_activity_participations (
+  activity_key text not null,
+  message_id bigint not null references public.radio_messages(id) on delete cascade,
+  created_at timestamptz default now(),
+  primary key (activity_key, message_id)
+);
+
 
 --------------------------------------------------------------------------------
 -- 3. 核心函数与触发器 (Functions & Triggers)
@@ -134,6 +142,41 @@ begin
 end;
 $$;
 
+-- 3.3 创建电台留言，并可选地报名冬信收纳局活动
+create or replace function public.create_radio_message(
+  p_nickname text,
+  p_content text,
+  p_linked_work_id bigint default null,
+  p_participate_in_winter_letter_storage boolean default false
+)
+returns bigint
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  new_message_id bigint;
+begin
+  if auth.uid() is null then
+    raise exception 'Unauthorized';
+  end if;
+
+  insert into public.radio_messages (user_id, nickname, content, linked_work_id)
+  values (auth.uid(), p_nickname, p_content, p_linked_work_id)
+  returning id into new_message_id;
+
+  if p_participate_in_winter_letter_storage then
+    insert into public.radio_activity_participations (activity_key, message_id)
+    values ('winter-letter-storage', new_message_id);
+  end if;
+
+  return new_message_id;
+end;
+$$;
+
+revoke all on function public.create_radio_message(text, text, bigint, boolean) from public;
+grant execute on function public.create_radio_message(text, text, bigint, boolean) to authenticated;
+
 
 --------------------------------------------------------------------------------
 -- 4. 性能索引优化 (Indexes)
@@ -152,6 +195,7 @@ create index if not exists idx_tags_category on tags(category);
 create index if not exists idx_radio_created_at on radio_messages(created_at desc);
 create index if not exists idx_radio_reactions_message_id on radio_reactions(message_id);
 create index if not exists idx_radio_reactions_user_id on radio_reactions(user_id);
+create index if not exists idx_radio_activity_participations_message_id on radio_activity_participations(message_id);
 
 -- 4.4 收藏夹查询优化
 create index if not exists idx_favorite_folders_user_id on favorite_folders(user_id);
@@ -171,6 +215,7 @@ alter table tags enable row level security;
 alter table work_tags enable row level security;
 alter table radio_messages enable row level security;
 alter table radio_reactions enable row level security; -- 补上这个漏网之鱼
+alter table radio_activity_participations enable row level security;
 alter table favorite_folders enable row level security;
 alter table folder_entries enable row level security; -- 补上这个漏网之鱼
 
@@ -202,6 +247,8 @@ create policy "Authenticated delete work_tags" on work_tags for delete using (au
 -- 5.6 Radio 策略
 create policy "Messages are public" on radio_messages for select using (true);
 create policy "Users can insert messages" on radio_messages for insert with check (auth.role() = 'authenticated');
+
+create policy "Activity participations are public" on radio_activity_participations for select using (true);
 
 -- 5.7 Reactions 策略
 create policy "Reactions are public" on radio_reactions for select using (true);

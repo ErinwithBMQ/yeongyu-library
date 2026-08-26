@@ -32,6 +32,7 @@ export default function RadioPage() {
     // const [messages, setMessages] = useState<MessageWithReactions[]>([]); // Replaced by SWR
     const [nickname, setNickname] = useState('');
     const [content, setContent] = useState('');
+    const [participateInWinterLetterStorage, setParticipateInWinterLetterStorage] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     // const [loadingMessages, setLoadingMessages] = useState(true); // Replaced by SWR
 
@@ -126,13 +127,15 @@ export default function RadioPage() {
             await postRadioMessage({
                 nickname: nickname.trim(),
                 content: content.trim(),
-                linked_work_id: linkedWork?.id
+                linked_work_id: linkedWork?.id,
+                participate_in_winter_letter_storage: participateInWinterLetterStorage
             });
 
             // 清空表单
             setNickname('');
             setContent('');
             setLinkedWork(undefined);
+            setParticipateInWinterLetterStorage(false);
 
             // 重新加载留言列表
             await mutate();
@@ -316,6 +319,16 @@ export default function RadioPage() {
                                     placeholder="写下你想说的话...（小于80字显示为留言，超过80字显示为来信）"
                                 ></textarea>
                             </div>
+
+                            <label className="mb-6 flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    checked={participateInWinterLetterStorage}
+                                    onChange={(event) => setParticipateInWinterLetterStorage(event.target.checked)}
+                                    className="h-4 w-4 rounded border-gray-300 text-sky-600 focus:ring-sky-500"
+                                />
+                                是否参加冬信收纳局活动
+                            </label>
 
                             {/* 引用作品 (可选) */}
                             <div className="mb-6 relative">

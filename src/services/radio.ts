@@ -8,6 +8,7 @@ export interface CreateMessageParams {
     nickname: string;
     content: string;
     linked_work_id?: number;
+    participate_in_winter_letter_storage: boolean;
 }
 
 /**
